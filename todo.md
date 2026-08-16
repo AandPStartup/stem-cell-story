@@ -6,3 +6,4 @@
 - [x] Soften the image and scientific-plate corners without losing the editorial atlas character.
 - [x] Remove the hero figure-number label while retaining its descriptive caption.
 - [x] Localize the header wordmark and preserve proper RTL alignment in Persian mode.
+- [x] Soften hero action buttons and add polished interaction effects.

@@ -10,3 +10,4 @@
 - [x] Enrich the hero action area with an interactive story-route detail layer.
 - [x] Remove the hero route panel, localize the differentiation label, and deepen the cell-fate explanation.
 - [x] Round the cell-fate buttons and add deeper developmental detail for every selectable fate.
+- [x] Redesign the cell-fate panel as a polished specimen card with stronger visual hierarchy.

@@ -18,7 +18,7 @@ button:focus-visible,a:focus-visible { outline: 3px solid var(--lime); outline-o
 .topbar { position: fixed; top: 0; left: 0; right: 0; height: 76px; padding: 0 5vw; display: flex; align-items: center; justify-content: space-between; z-index: 20; background: color-mix(in srgb, var(--background) 84%, transparent); backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--foreground); text-decoration: none; letter-spacing: -.04em; font-weight: 500; line-height: .83; font-size: 18px; text-transform: lowercase; }
 .brand img { width: 39px; height: 39px; object-fit: contain; }
-.brand b { color: var(--aqua); font-weight: 700; }.brand span { font-size: 20px; }
+.brand b { color: var(--aqua); font-weight: 700; }.brand span { font-size: 20px; }.brand-fa { gap: 9px; font-family: 'Vazirmatn','IBM Plex Sans',sans-serif; line-height: 1.02; letter-spacing: -.06em; }.brand-fa span { font-size: 15px; text-align: right; font-weight: 600; }.brand-fa b { color: var(--aqua); font-weight: 800; }
 .topbar-actions { display: flex; gap: 9px; align-items: center; }
 .control-pill,.icon-control { border: 1px solid var(--border); color: var(--foreground); background: color-mix(in srgb, var(--card) 88%, transparent); border-radius: 999px; min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 0 13px; transition: .2s ease; }
 .icon-control { width: 38px; padding: 0; }

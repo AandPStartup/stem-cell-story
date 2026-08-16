@@ -163,7 +163,7 @@ function SectionTag({ n, label }: { n: string; label: string }) {
 function AppHeader({ lang, setLang, theme, toggleTheme }: { lang: Lang; setLang: (l: Lang) => void; theme: string; toggleTheme: () => void }) {
   const t = copy[lang];
   return <header className="topbar">
-    <a href="#top" className="brand" aria-label="Cell Story home"><img src={ASSETS.mark} alt="" /><span>cell<br /><b>story</b></span></a>
+    <a href="#top" className={`brand ${lang === "fa" ? "brand-fa" : "brand-en"}`} aria-label={lang === "fa" ? "خانه روایت سلول" : "Cell Story home"}><img src={ASSETS.mark} alt="" /><span>{lang === "fa" ? <><b>روایت</b><br />سلول</> : <>cell<br /><b>story</b></>}</span></a>
     <div className="topbar-actions">
       <button className="control-pill" onClick={() => setLang(lang === "fa" ? "en" : "fa")} aria-label="Change language"><Globe2 size={15} /><span>{lang === "fa" ? "English" : "فارسی"}</span></button>
       <button className="icon-control" onClick={toggleTheme} aria-label={theme === "dark" ? "Use light theme" : "Use dark theme"}>{theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}</button>

@@ -1,0 +1,5 @@
+- [x] Remove the side and mobile progress navigation.
+- [x] Make section scrolling feel deliberate and snappy.
+- [x] Add tighter fade-and-rise storytelling entrances while preserving reduced-motion support.
+- [x] Keep the atlas motif as inline section-thread markers rather than awkward side chrome.
+- [x] Verify the revised desktop and mobile experience.

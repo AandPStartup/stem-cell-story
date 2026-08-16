@@ -1,5 +1,5 @@
 // Bio-Editorial Atlas: asymmetric scientific storytelling, bilingual RTL/LTR, Aqua Cobalt accent.
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowUp, ArrowUpRight, Check, ChevronDown, FlaskConical, Globe2, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -174,7 +174,6 @@ function AppHeader({ lang, setLang, theme, toggleTheme }: { lang: Lang; setLang:
 export default function Home() {
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem("cell-story-lang") as Lang) || "fa");
   const { theme, toggleTheme } = useTheme();
-  const [activeSection, setActiveSection] = useState("one");
   const [selectedFate, setSelectedFate] = useState(0);
   const [deep, setDeep] = useState(false);
   const [openChallenge, setOpenChallenge] = useState<number | null>(null);
@@ -183,19 +182,13 @@ export default function Home() {
   const reduced = useReducedMotion();
   const t = copy[lang];
   const direction = lang === "fa" ? "rtl" : "ltr";
-  const motionProps = reduced ? {} : { initial: { opacity: 0, y: 22 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-80px" }, transition: { duration: 0.6 } };
+  const motionProps = reduced ? {} : { initial: { opacity: 0, y: 34 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-16% 0px -16%" }, transition: { duration: 0.42, ease: "easeOut" as const } };
 
   useEffect(() => { localStorage.setItem("cell-story-lang", lang); document.documentElement.lang = lang === "fa" ? "fa" : "en"; document.documentElement.dir = direction; }, [lang, direction]);
-  useEffect(() => { const observer = new IntersectionObserver((entries) => entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id); }), { rootMargin: "-35% 0px -55%" }); ["one", "two", "three"].forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); }); return () => observer.disconnect(); }, []);
-  const nav = useMemo(() => [{ id: "one", n: "01", label: t.questionLabels[0] }, { id: "two", n: "02", label: t.questionLabels[1] }, { id: "three", n: "03", label: t.questionLabels[2] }], [t]);
-
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
 
   return <div id="top" className="site-shell" dir={direction}>
     <AppHeader lang={lang} setLang={(l) => setLang(l)} theme={theme} toggleTheme={() => toggleTheme?.()} />
-    <div className="lineage-spine" aria-hidden="true"><span className="spine-node spine-node-a" /><span className="spine-node spine-node-b" /><span className="spine-node spine-node-c" /><span className="spine-label">CELL PATH / مسیر سلول</span></div>
-    <aside className="progress-rail" aria-label={t.explore}>{nav.map(item => <button key={item.id} onClick={() => scrollTo(item.id)} className={activeSection === item.id ? "active" : ""}><span>{item.n}</span><em>{item.label}</em></button>)}</aside>
-
     <main>
       <section className="hero section-grid">
         <div className="hero-copy">
@@ -206,7 +199,7 @@ export default function Home() {
           <div className="hero-actions"><button className="btn-primary" onClick={() => scrollTo("one")}>{t.begin}<ArrowDown size={16} /></button><button className="btn-quiet" onClick={() => scrollTo("differentiation")}>{t.journey}<ArrowUpRight size={16} /></button></div>
           <div className="hero-note"><span>01</span><span>{t.scroll}</span></div>
         </div>
-        <div className="hero-visual"><div className="orbit orbit-a" /><div className="orbit orbit-b" /><img src={ASSETS.hero} alt={lang === "fa" ? "نمایش هنری علمی از یک سلول بنیادی در محیط سلولی" : "Artistic scientific visualization of a stem cell in a cellular environment"} /><div className="visual-caption"><span>FIG. 01</span><span>{lang === "fa" ? "یک سلول؛ چند مسیر ممکن" : "One cell; many possible paths"}</span></div></div>
+        <div className="hero-visual"><div className="orbit orbit-a" /><div className="orbit orbit-b" /><img src={ASSETS.hero} alt={lang === "fa" ? "نمایش هنری علمی از یک سلول بنیادی در محیط سلولی" : "Artistic scientific visualization of a stem cell in a cellular environment"} /><div className="plate-callout hero-callout"><i />{lang === "fa" ? "هسته‌ی قابلیت" : "Potential, held within"}</div><div className="visual-caption"><span>FIG. 01</span><span>{lang === "fa" ? "یک سلول؛ چند مسیر ممکن" : "One cell; many possible paths"}</span></div></div>
       </section>
 
       <section id="one" className="story-section section-grid">
@@ -220,7 +213,7 @@ export default function Home() {
 
       <section id="three" className="ips-section section-grid"><motion.div className="ips-visual" {...motionProps}><img src={ASSETS.ips} alt={lang === "fa" ? "بازبرنامه‌ریزی سلول بالغ به سلول iPS" : "Reprogramming a mature cell into an iPS cell"} /><div className="plate-callout ips-callout"><i />{lang === "fa" ? "بازگشت به حالت پرتوان" : "Return to pluripotency"}</div><div className="ips-label"><span>FIG. 03</span><b>iPS</b><small>{lang === "fa" ? "بازبرنامه‌ریزی سلولی" : "cellular reprogramming"}</small></div><div className="plate-caption"><span>PLATE 03</span><b>{lang === "fa" ? "از سلول بالغ تا امکان تازه" : "From maturity to possibility"}</b></div></motion.div><motion.div className="ips-copy" {...motionProps}><SectionTag n="03" label={t.question} /><h2>{t.ipsTitle}</h2><p className="lead">{t.ipsIntro}</p><p>{t.ipsBody}</p><div className="ips-path">{[lang === "fa" ? "سلول پوستی بالغ" : "Mature skin cell", lang === "fa" ? "بازبرنامه‌ریزی" : "Reprogramming", lang === "fa" ? "سلول iPS" : "iPS cell", lang === "fa" ? "تمایز هدایت‌شده" : "Directed differentiation"].map((x, i) => <div key={x}><span>{String(i + 1).padStart(2, "0")}</span><b>{x}</b>{i < 3 && <i>→</i>}</div>)}</div><div className="why-box"><div><span>WHY IT MATTERS</span><h3>{t.why}</h3></div><p>{t.whyBody}</p></div></motion.div></section>
 
-      <section className="quiz-section"><div className="quiz-inner"><SectionTag n="04" label={lang === "fa" ? "ایستگاه یادگیری" : "Learning checkpoint"} /><div className="quiz-heading"><h2>{t.quizTitle}</h2><p>{t.quizIntro}</p></div><div className="quiz-card"><div className="quiz-meta"><span>{String(quizIndex + 1).padStart(2, "0")} / 03</span><div className="quiz-progress"><i style={{ width: `${((quizIndex + 1) / 3) * 100}%` }} /></div></div><h3>{quiz[lang][quizIndex].q}</h3><div className="quiz-options">{quiz[lang][quizIndex].options.map((option, i) => <button key={option} className={selectedAnswer === i ? (i === quiz[lang][quizIndex].answer ? "right" : "wrong") : ""} onClick={() => setSelectedAnswer(i)}><span>{String.fromCharCode(65 + i)}</span>{option}{selectedAnswer === i && (i === quiz[lang][quizIndex].answer ? <Check size={17} /> : <X size={17} />)}</button>)}</div>{selectedAnswer !== null && <p className={`feedback ${selectedAnswer === quiz[lang][quizIndex].answer ? "good" : ""}`}>{selectedAnswer === quiz[lang][quizIndex].answer ? t.correct : t.almost} {quiz[lang][quizIndex].explain}</p>}<button className="btn-primary" disabled={selectedAnswer === null} onClick={() => { if (quizIndex < 2) { setQuizIndex(quizIndex + 1); setSelectedAnswer(null); } else scrollTo("footer"); }}>{quizIndex === 2 ? t.finish : t.next}<ArrowUpRight size={16} /></button></div></div></section>
+      <section className="quiz-section"><div className="quiz-inner"><SectionTag n="04" label={lang === "fa" ? "ایستگاه یادگیری" : "Learning checkpoint"} /><div className="quiz-heading"><h2>{t.quizTitle}</h2><p>{t.quizIntro}</p></div><div className="quiz-card"><div className="workbook-stamp"><img src={ASSETS.mark} alt="" /><span>{lang === "fa" ? "برگه‌ی بررسی روایت" : "Narrative field check"}</span></div><div className="quiz-meta"><span>{String(quizIndex + 1).padStart(2, "0")} / 03</span><div className="quiz-progress"><i style={{ width: `${((quizIndex + 1) / 3) * 100}%` }} /></div></div><h3>{quiz[lang][quizIndex].q}</h3><div className="quiz-options">{quiz[lang][quizIndex].options.map((option, i) => <button key={option} className={selectedAnswer === i ? (i === quiz[lang][quizIndex].answer ? "right" : "wrong") : ""} onClick={() => setSelectedAnswer(i)}><span>{String.fromCharCode(65 + i)}</span>{option}{selectedAnswer === i && (i === quiz[lang][quizIndex].answer ? <Check size={17} /> : <X size={17} />)}</button>)}</div>{selectedAnswer !== null && <p className={`feedback ${selectedAnswer === quiz[lang][quizIndex].answer ? "good" : ""}`}>{selectedAnswer === quiz[lang][quizIndex].answer ? t.correct : t.almost} {quiz[lang][quizIndex].explain}</p>}<button className="btn-primary" disabled={selectedAnswer === null} onClick={() => { if (quizIndex < 2) { setQuizIndex(quizIndex + 1); setSelectedAnswer(null); } else scrollTo("footer"); }}>{quizIndex === 2 ? t.finish : t.next}<ArrowUpRight size={16} /></button></div></div></section>
 
       <footer id="footer" className="footer"><div className="footer-top"><div><img src={ASSETS.mark} alt="" className="footer-mark" /><h2>{t.closing}</h2></div><div className="source-list"><h3>{t.sources}</h3><a href="https://www.isscr.org/treatment-guide" target="_blank" rel="noreferrer">ISSCR Guide to Stem Cell Treatments <ArrowUpRight size={13} /></a><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4287204/" target="_blank" rel="noreferrer">Induced Pluripotent Stem Cells for Regenerative Medicine <ArrowUpRight size={13} /></a><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6873767/" target="_blank" rel="noreferrer">Research and therapy with iPS cells <ArrowUpRight size={13} /></a><a href="https://www.isscr.org/guidelines" target="_blank" rel="noreferrer">ISSCR Guidelines <ArrowUpRight size={13} /></a></div></div><div className="footer-bottom"><span>© 2026 CELL STORY</span><span>{t.footer}</span><button onClick={() => scrollTo("top")} aria-label="Back to top"><ArrowUp size={16} /></button></div></footer>
     </main>

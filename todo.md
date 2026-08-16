@@ -9,3 +9,4 @@
 - [x] Soften hero action buttons and add polished interaction effects.
 - [x] Enrich the hero action area with an interactive story-route detail layer.
 - [x] Remove the hero route panel, localize the differentiation label, and deepen the cell-fate explanation.
+- [x] Round the cell-fate buttons and add deeper developmental detail for every selectable fate.

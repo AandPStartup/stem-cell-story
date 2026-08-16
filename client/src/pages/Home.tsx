@@ -199,7 +199,7 @@ export default function Home() {
           <div className="hero-actions"><button className="btn-primary" onClick={() => scrollTo("one")}>{t.begin}<ArrowDown size={16} /></button><button className="btn-quiet" onClick={() => scrollTo("differentiation")}>{t.journey}<ArrowUpRight size={16} /></button></div>
           <div className="hero-note"><span>01</span><span>{t.scroll}</span></div>
         </div>
-        <div className="hero-visual"><div className="orbit orbit-a" /><div className="orbit orbit-b" /><img src={ASSETS.hero} alt={lang === "fa" ? "نمایش هنری علمی از یک سلول بنیادی در محیط سلولی" : "Artistic scientific visualization of a stem cell in a cellular environment"} /><div className="plate-callout hero-callout"><i />{lang === "fa" ? "هسته‌ی قابلیت" : "Potential, held within"}</div><div className="visual-caption"><span>FIG. 01</span><span>{lang === "fa" ? "یک سلول؛ چند مسیر ممکن" : "One cell; many possible paths"}</span></div></div>
+        <div className="hero-visual"><div className="orbit orbit-a" /><div className="orbit orbit-b" /><img src={ASSETS.hero} alt={lang === "fa" ? "نمایش هنری علمی از یک سلول بنیادی در محیط سلولی" : "Artistic scientific visualization of a stem cell in a cellular environment"} /><div className="plate-callout hero-callout"><i />{lang === "fa" ? "هسته‌ی قابلیت" : "Potential, held within"}</div><div className="visual-caption"><span>{lang === "fa" ? "یک سلول؛ چند مسیر ممکن" : "One cell; many possible paths"}</span></div></div>
       </section>
 
       <section id="one" className="story-section section-grid">

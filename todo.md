@@ -4,3 +4,4 @@
 - [x] Keep the atlas motif as inline section-thread markers rather than awkward side chrome.
 - [x] Verify the revised desktop and mobile experience.
 - [x] Soften the image and scientific-plate corners without losing the editorial atlas character.
+- [x] Remove the hero figure-number label while retaining its descriptive caption.

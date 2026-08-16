@@ -11,3 +11,4 @@
 - [x] Remove the hero route panel, localize the differentiation label, and deepen the cell-fate explanation.
 - [x] Round the cell-fate buttons and add deeper developmental detail for every selectable fate.
 - [x] Redesign the cell-fate panel as a polished specimen card with stronger visual hierarchy.
+- [x] Add clearer, more detailed scientific explanation to each cell-fate learning panel.

@@ -7,3 +7,4 @@
 - [x] Remove the hero figure-number label while retaining its descriptive caption.
 - [x] Localize the header wordmark and preserve proper RTL alignment in Persian mode.
 - [x] Soften hero action buttons and add polished interaction effects.
+- [x] Enrich the hero action area with an interactive story-route detail layer.

@@ -197,6 +197,11 @@ export default function Home() {
           <p className="hero-subtitle">{t.subtitle}</p>
           <p className="hero-body">{t.heroBody}</p>
           <div className="hero-actions"><button className="btn-primary" onClick={() => scrollTo("one")}>{t.begin}<ArrowDown size={16} /></button><button className="btn-quiet" onClick={() => scrollTo("differentiation")}>{t.journey}<ArrowUpRight size={16} /></button></div>
+          <div className="hero-field-guide" aria-label={lang === "fa" ? "مسیر تعاملی روایت" : "Interactive story route"}>
+            <div className="field-guide-head"><span className="live-signal"><i />{lang === "fa" ? "مسیر روایت فعال است" : "Story route active"}</span><span>ATLAS / 01</span></div>
+            <div className="route-map">{["one", "two", "three"].map((id, i) => <button key={id} className="route-stop" onClick={() => scrollTo(id)}><span>0{i + 1}</span><b>{t.questionLabels[i]}</b><em>{lang === "fa" ? "کاوش" : "Explore"}</em></button>)}</div>
+            <div className="route-note"><span className="signal-orb"><i /><i /><i /></span><p>{lang === "fa" ? "سه پرسش، یک مسیر: از هویت سلول تا امکان بازسازی." : "Three questions, one route: from cell identity to regenerative possibility."}</p></div>
+          </div>
           <div className="hero-note"><span>01</span><span>{t.scroll}</span></div>
         </div>
         <div className="hero-visual"><div className="orbit orbit-a" /><div className="orbit orbit-b" /><img src={ASSETS.hero} alt={lang === "fa" ? "نمایش هنری علمی از یک سلول بنیادی در محیط سلولی" : "Artistic scientific visualization of a stem cell in a cellular environment"} /><div className="plate-callout hero-callout"><i />{lang === "fa" ? "هسته‌ی قابلیت" : "Potential, held within"}</div><div className="visual-caption"><span>{lang === "fa" ? "یک سلول؛ چند مسیر ممکن" : "One cell; many possible paths"}</span></div></div>

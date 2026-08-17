@@ -13,3 +13,4 @@
 - [x] Redesign the cell-fate panel as a polished specimen card with stronger visual hierarchy.
 - [x] Add clearer, more detailed scientific explanation to each cell-fate learning panel.
 - [x] Balance the desktop heights of the explanatory column and specimen-card panel.
+- [x] Replace the empty cell-fate area with an interactive bilingual scientific exploration module and verify it on desktop and mobile.

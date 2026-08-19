@@ -229,3 +229,19 @@ main { scroll-snap-type: y proximity; }
 
 /* Expanded challenge evidence: a second readable layer for students who open a gate. */
 .challenge-evidence { display: block; margin-top: 10px; padding-top: 9px; border-top: 1px dashed color-mix(in srgb, var(--aqua) 28%, var(--border)); color: color-mix(in srgb, var(--foreground) 84%, var(--aqua)); font-size: 11px; line-height: 1.75; font-weight: 500; }.dark .challenge-evidence { color: color-mix(in srgb, #eaf4f3 86%, var(--aqua)); }
+
+/* Interactive research-gate overlay for the treatment image plate */
+.challenge-gate { position: absolute; bottom: 16px; left: 16px; right: 16px; background: color-mix(in srgb, var(--card) 85%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid color-mix(in srgb, var(--border) 40%, transparent); border-radius: 12px; padding: 16px; z-index: 10; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 8px 24px -8px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+.dark .challenge-gate { background: color-mix(in srgb, var(--card) 75%, transparent); border-color: color-mix(in srgb, var(--border) 60%, transparent); box-shadow: 0 8px 24px -8px rgba(0,0,0,0.4); }
+.challenge-gate-head { display: flex; flex-direction: column; gap: 4px; }
+.challenge-gate-head span { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; color: var(--aqua); text-transform: uppercase; }
+.challenge-gate-head b { font-size: 14px; font-weight: 600; color: var(--foreground); line-height: 1.3; }
+.gate-mini-track { display: flex; gap: 6px; }
+.gate-mini-track button { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 8px; background: color-mix(in srgb, var(--background) 50%, transparent); border: 1px solid color-mix(in srgb, var(--border) 30%, transparent); border-radius: 8px; text-align: start; transition: all 0.2s ease; }
+.gate-mini-track button:hover { background: color-mix(in srgb, var(--background) 80%, transparent); border-color: color-mix(in srgb, var(--aqua) 30%, transparent); }
+.gate-mini-track button.active { background: var(--background); border-color: var(--aqua); box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--aqua) 20%, transparent); }
+.gate-mini-track button i { font-style: normal; font-size: 10px; font-weight: 600; color: var(--muted-foreground); }
+.gate-mini-track button.active i { color: var(--aqua); }
+.gate-mini-track button span { font-size: 11px; font-weight: 500; color: var(--foreground); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.challenge-gate p { font-size: 12px; line-height: 1.6; color: var(--muted-foreground); margin: 0; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--border) 30%, transparent); }
+@media (max-width: 768px) { .challenge-gate { position: relative; bottom: auto; left: auto; right: auto; margin-top: 16px; } }

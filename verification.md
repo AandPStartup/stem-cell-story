@@ -9,3 +9,7 @@ The live page loads after the rollback and the treatment-challenge section remai
 ## Latest challenge-section verification
 
 The page remains responsive after the challenge-content expansion. The interactive differentiation explorer and selected-station panel remain intact above the treatment-challenge section; no surrounding content was removed.
+
+## Research-gate interaction verification
+
+The treatment image now contains three selectable translation-gate controls. Activating the second gate updates the active label to “Immunity and rejection” and replaces the helper text with its corresponding evidence explanation. The existing challenge cards remain available separately.

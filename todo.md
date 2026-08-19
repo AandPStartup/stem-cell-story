@@ -25,3 +25,4 @@
 - [x] Soften only the selected challenge button with rounded corners while preserving its behavior and surrounding content.
 - [x] Expand the selected treatment-challenge explanations in Persian and English while preserving the existing layout and controls.
 - [x] Redesign the treatment-challenge area as an interactive bilingual research-gate experience while preserving existing content.
+- [x] Refine the treatment-journey progress section: improve hierarchy, spacing, connector treatment, bilingual readability, and responsive behavior without changing its meaning.

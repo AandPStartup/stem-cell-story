@@ -245,3 +245,29 @@ main { scroll-snap-type: y proximity; }
 .gate-mini-track button span { font-size: 11px; font-weight: 500; color: var(--foreground); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .challenge-gate p { font-size: 12px; line-height: 1.6; color: var(--muted-foreground); margin: 0; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--border) 30%, transparent); }
 @media (max-width: 768px) { .challenge-gate { position: relative; bottom: auto; left: auto; right: auto; margin-top: 16px; } }
+
+/* Bio-Editorial Atlas: the treatment journey is a compact evidence map, not a loose line of labels. */
+.evidence-strip { margin-top: 78px; padding: 28px 30px 24px; border: 1px solid color-mix(in srgb, var(--aqua) 22%, var(--border)); border-radius: 18px; background: linear-gradient(145deg, color-mix(in srgb, var(--navy) 96%, var(--aqua)), color-mix(in srgb, var(--navy) 88%, #19364a)); color: #eaf4f3; overflow: hidden; position: relative; }
+.evidence-strip:before { content: ''; position: absolute; inset: 0; opacity: .22; background-image: linear-gradient(rgba(117,217,218,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(117,217,218,.16) 1px, transparent 1px); background-size: 28px 28px; mask-image: linear-gradient(135deg, black, transparent 72%); pointer-events: none; }
+.evidence-heading, .evidence-track, .evidence-foot { position: relative; z-index: 1; }
+.evidence-heading { display: flex; justify-content: space-between; align-items: end; gap: 30px; padding-bottom: 26px; border-bottom: 1px solid rgba(117,217,218,.18); }
+.evidence-heading > div { display: grid; gap: 6px; }
+.evidence-kicker { color: #75d9da; font: 700 9px 'IBM Plex Sans'; letter-spacing: .16em; }
+.evidence-heading h3 { margin: 0; color: #f1f8f6; font-size: clamp(1.35rem, 2.5vw, 2rem); letter-spacing: -.04em; line-height: 1.25; }
+.evidence-heading p { max-width: 360px; margin: 0; color: #a9bdc4; font-size: 12px; line-height: 1.8; }
+.evidence-track { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 28px; padding: 32px 0 26px; }
+.evidence-track:before { content: ''; position: absolute; inset-inline: 0; top: 45px; height: 1px; background: #355161; }
+.evidence-fill { position: absolute; top: 43px; inset-inline-start: 0; left: auto; width: 62%; height: 3px; border-radius: 999px; background: linear-gradient(90deg, var(--aqua), var(--lime)); box-shadow: 0 0 14px rgba(15,159,176,.35); }
+.evidence-stage { display: grid !important; grid-template-columns: auto 1fr; grid-template-rows: 26px auto; column-gap: 12px; row-gap: 8px; align-items: start; position: relative; }
+.evidence-stage > span { grid-column: 1; grid-row: 1; color: #ff9e91; font: 700 10px 'IBM Plex Sans'; letter-spacing: .1em; }
+.evidence-stage > i { grid-column: 2; grid-row: 1; width: 11px; height: 11px; margin-top: 1px; border: 2px solid var(--aqua); border-radius: 50%; background: var(--navy); box-shadow: 0 0 0 5px rgba(15,159,176,.08); z-index: 2; }
+.evidence-stage > div { grid-column: 1 / -1; display: grid; gap: 5px; padding: 13px 15px 12px; border: 1px solid rgba(117,217,218,.18); border-radius: 11px; background: rgba(7,24,42,.48); min-height: 58px; }
+.evidence-stage b { color: #f1f8f6; font-size: 13px; line-height: 1.3; }
+.evidence-stage small { color: #8fa8b3; font-size: 11px; line-height: 1.4; }
+.evidence-stage.stage-2 > i { border-color: var(--lime); box-shadow: 0 0 0 5px rgba(185,211,106,.08); }
+.evidence-stage.stage-3 > i { border-color: var(--coral); box-shadow: 0 0 0 5px rgba(232,110,97,.08); }
+.evidence-stage.stage-3 > div { border-color: rgba(185,211,106,.42); background: rgba(185,211,106,.08); }
+.evidence-foot { display: flex; justify-content: space-between; gap: 20px; padding-top: 17px; border-top: 1px solid rgba(117,217,218,.18); font-size: 11px; line-height: 1.5; }
+.evidence-foot span { color: #a9bdc4; }
+.evidence-foot b { color: #d9ef98; font-weight: 600; }
+@media (max-width: 700px) { .evidence-strip { margin-top: 54px; padding: 22px 18px 19px; }.evidence-heading { display: grid; gap: 14px; align-items: start; }.evidence-heading p { max-width: none; }.evidence-track { grid-template-columns: 1fr; gap: 10px; padding: 22px 0 18px; }.evidence-track:before { inset-inline-start: 5px; inset-inline-end: auto; top: 22px; bottom: 22px; width: 1px; height: auto; }.evidence-fill { inset-inline-start: 4px; top: 22px; width: 3px; height: 56%; }.evidence-stage { grid-template-columns: 30px 1fr; grid-template-rows: auto; column-gap: 10px; align-items: center; }.evidence-stage > span { grid-column: 1; grid-row: 1; }.evidence-stage > i { grid-column: 1; grid-row: 1; justify-self: end; margin: 0 -1px 0 0; }.evidence-stage > div { grid-column: 2; grid-row: 1; min-height: 0; padding: 11px 13px; }.evidence-foot { display: grid; gap: 4px; } }

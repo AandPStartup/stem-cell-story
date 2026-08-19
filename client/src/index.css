@@ -133,3 +133,16 @@ main { scroll-snap-type: y proximity; }
 [dir="rtl"] .timeline-detail { text-align: right; }
 @media (max-width: 900px) { .timeline-intro { gap: 24px; } .timeline-signal { width: 100%; } .timeline-detail { grid-template-columns: 46px 1fr; gap: 13px; padding: 17px; } .timeline-detail-index { width: 42px; height: 42px; border-radius: 12px; font-size: 14px; } .timeline-detail button { grid-column: 2; justify-self: start; } [dir="rtl"] .timeline-detail button { justify-self: end; } }
 @media (max-width: 560px) { .timeline-detail h3 { font-size: 18px; } .timeline-detail p { font-size: 12px; } }
+
+/* Bio-Editorial Atlas: field notes turn the open lower section into an intentional reading instrument. */
+.timeline-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.timeline-note { position: relative; overflow: hidden; min-height: 82px; display: grid; grid-template-columns: 28px 1fr; align-items: start; gap: 10px; padding: 14px; border: 1px solid rgba(117,217,218,.2); border-radius: 14px; background: rgba(8,32,50,.3); transition: transform .22s ease, border-color .22s ease, background .22s ease; }
+.timeline-note:hover { transform: translateY(-3px); border-color: rgba(117,217,218,.55); background: rgba(15,159,176,.15); }
+.timeline-note:after { content: ''; position: absolute; width: 66px; height: 66px; right: -24px; bottom: -35px; border: 1px solid rgba(185,211,106,.28); border-radius: 50%; }
+.timeline-note > span { color: #75d9da; font: 700 10px 'IBM Plex Sans'; }
+.timeline-note div { display: grid; gap: 5px; }
+.timeline-note small { color: #75d9da; font: 700 9px 'IBM Plex Sans'; letter-spacing: .11em; }
+.timeline-note b { color: #d8e7e7; font-size: 11px; line-height: 1.6; font-weight: 500; }
+.timeline-note i { position: absolute; right: 14px; top: 14px; width: 5px; height: 5px; border-radius: 50%; background: #b9d36a; box-shadow: 0 0 0 4px rgba(185,211,106,.12); }
+[dir="rtl"] .timeline-note { text-align: right; }
+@media (max-width: 900px) { .timeline-notes { grid-template-columns: 1fr; gap: 8px; } .timeline-note { min-height: auto; } }

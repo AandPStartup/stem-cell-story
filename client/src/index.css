@@ -199,3 +199,16 @@ main { scroll-snap-type: y proximity; }
 .maturity-tags span { padding: 4px 8px; border: 1px solid color-mix(in srgb, var(--coral) 25%, var(--border)); border-radius: 999px; color: var(--foreground); background: color-mix(in srgb, var(--card) 65%, transparent); font-size: 9px; }
 [dir="rtl"] .maturity-head,[dir="rtl"] .maturity-meter,[dir="rtl"] .stem-maturity > p,[dir="rtl"] .maturity-tags { text-align: right; }
 @media (max-width: 560px) { .maturity-meter { grid-template-columns: 1fr; gap: 7px; }.maturity-meter i,.maturity-meter b { grid-row: auto; }.maturity-meter b { margin-top: 2px; } }
+
+/* Bio-Editorial Atlas: the differentiation route is a measurable path; each station marker sits on its line and glows when active. */
+.timeline-line { top: 28px; z-index: 0; }
+.timeline-step { z-index: 1; grid-template-rows: 15px 11px auto; gap: 8px; align-items: start; }
+.timeline-step span { position: relative; z-index: 2; }
+.timeline-step i { justify-self: center; align-self: center; position: relative; z-index: 3; transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.timeline-step.selected i { transform: scale(1.12); animation: timelineGlow 2.1s ease-in-out infinite; }
+.timeline-label { display: grid; gap: 5px; min-width: 0; }
+.timeline-label b { font-weight: 600; line-height: 1.35; }
+.timeline-label small { display: block; max-width: 170px; color: #8298a7; font-size: 10px; line-height: 1.55; }
+.timeline-step.selected .timeline-label small { color: #a9cdd0; }
+@keyframes timelineGlow { 0%,100% { box-shadow: 0 0 0 5px rgba(15,159,176,.18), 0 0 10px rgba(15,159,176,.25); } 50% { box-shadow: 0 0 0 8px rgba(15,159,176,.11), 0 0 25px rgba(117,217,218,.72); } }
+@media (max-width: 560px) { .timeline { padding-inline-start: 10px; }.timeline-line { top: 0; left: auto; right: auto; inset-inline-start: 47px; height: 100%; width: 1px; }.timeline-step { display: grid; grid-template-columns: 22px 11px 1fr; grid-template-rows: auto; gap: 10px; align-items: start; }.timeline-step span { width: 22px; }.timeline-step i { margin-top: 3px; }.timeline-label { gap: 3px; }.timeline-label small { max-width: none; font-size: 10px; } }

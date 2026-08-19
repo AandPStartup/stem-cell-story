@@ -182,3 +182,20 @@ main { scroll-snap-type: y proximity; }
 .proof-foot span { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px color-mix(in srgb, var(--lime) 13%, transparent); }
 [dir="rtl"] .proof-head,[dir="rtl"] .proof-track,[dir="rtl"] .proof-foot { text-align: right; }
 @media (max-width: 560px) { .proof-track { grid-template-columns: 1fr; gap: 7px; }.proof-track:before { top: 18px; bottom: 18px; left: 9px; right: auto; width: 1px; height: auto; background: linear-gradient(var(--aqua), var(--lime)); }.proof-track > div { grid-template-columns: 25px 1fr; column-gap: 8px; }.proof-track i { grid-row: span 2; }.proof-track p { grid-column: 2; } }
+
+/* Bio-Editorial Atlas: the final maturity plate distinguishes visual resemblance from proven cell function. */
+.stem-maturity { position: relative; overflow: hidden; margin: 0 0 24px; padding: 14px 16px 13px; border: 1px solid color-mix(in srgb, var(--coral) 22%, var(--border)); border-radius: 16px; background: linear-gradient(145deg, color-mix(in srgb, var(--coral) 5%, var(--card)), color-mix(in srgb, var(--aqua) 6%, var(--card))); }
+.stem-maturity:before { content: ''; position: absolute; width: 170px; height: 170px; left: -92px; bottom: -116px; border: 1px solid color-mix(in srgb, var(--coral) 26%, transparent); border-radius: 50%; box-shadow: 0 0 0 13px color-mix(in srgb, var(--coral) 5%, transparent); }
+.maturity-head { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 9px; border-bottom: 1px solid color-mix(in srgb, var(--coral) 18%, var(--border)); }
+.maturity-head span { color: var(--coral); font: 700 9px 'IBM Plex Sans'; letter-spacing: .1em; }
+.maturity-head b { color: var(--muted-foreground); font: 600 9px 'IBM Plex Sans'; letter-spacing: .06em; }
+.maturity-meter { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 9px; padding: 13px 0 7px; }
+.maturity-meter:before { content: ''; position: absolute; left: 0; right: 0; top: 21px; height: 4px; border-radius: 999px; background: linear-gradient(90deg, color-mix(in srgb, var(--coral) 55%, transparent) 0 38%, color-mix(in srgb, var(--lime) 65%, transparent) 38% 100%); }
+.maturity-meter span { position: relative; z-index: 1; display: block; height: 10px; width: 38%; border-radius: 999px; background: var(--coral); box-shadow: 0 0 0 4px color-mix(in srgb, var(--coral) 12%, transparent); }
+.maturity-meter i,.maturity-meter b { position: relative; grid-row: 2; color: var(--muted-foreground); font: 600 8px 'IBM Plex Sans'; font-style: normal; letter-spacing: .04em; }
+.maturity-meter b { color: #71852c; }
+.stem-maturity > p { position: relative; z-index: 1; margin: 7px 0 11px; color: var(--muted-foreground); font-size: 10px; line-height: 1.78; }
+.maturity-tags { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px; }
+.maturity-tags span { padding: 4px 8px; border: 1px solid color-mix(in srgb, var(--coral) 25%, var(--border)); border-radius: 999px; color: var(--foreground); background: color-mix(in srgb, var(--card) 65%, transparent); font-size: 9px; }
+[dir="rtl"] .maturity-head,[dir="rtl"] .maturity-meter,[dir="rtl"] .stem-maturity > p,[dir="rtl"] .maturity-tags { text-align: right; }
+@media (max-width: 560px) { .maturity-meter { grid-template-columns: 1fr; gap: 7px; }.maturity-meter i,.maturity-meter b { grid-row: auto; }.maturity-meter b { margin-top: 2px; } }

@@ -20,3 +20,4 @@
 - [x] Add a third related bilingual data module about functional maturity inside the final highlighted gap only.
 - [x] Align differentiation-stage dots to the connector line, add active glow, and expand stage descriptions.
 - [x] Give each differentiation stage a unique color for its dot, label, connector accent, and active glow.
+- [x] Refine only the selected timeline button with softer rounding and improved interaction effects; preserve surrounding content.

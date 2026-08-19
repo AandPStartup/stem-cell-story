@@ -226,3 +226,6 @@ main { scroll-snap-type: y proximity; }
 
 /* Challenge controls: soften the sharp card-button silhouette without changing content or behavior. */
 .challenge-card { border-radius: 16px; overflow: hidden; transition: transform .2s cubic-bezier(.23,1,.32,1), border-color .2s ease, box-shadow .2s ease, background .2s ease; }.challenge-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px color-mix(in srgb, var(--aqua) 10%, transparent); }.challenge-card.open { border-radius: 16px; }
+
+/* Contrast-safe challenge border: clear in both paper-light and lab-dark themes. */
+.challenge-card { border: 2px solid #0f8798; }.dark .challenge-card { border-color: #75d9da; }.challenge-card:hover,.challenge-card.open { border-color: #087283; }.dark .challenge-card:hover,.dark .challenge-card.open { border-color: #b9d36a; }

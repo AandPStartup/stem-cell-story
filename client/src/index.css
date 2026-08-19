@@ -146,3 +146,22 @@ main { scroll-snap-type: y proximity; }
 .timeline-note i { position: absolute; right: 14px; top: 14px; width: 5px; height: 5px; border-radius: 50%; background: #b9d36a; box-shadow: 0 0 0 4px rgba(185,211,106,.12); }
 [dir="rtl"] .timeline-note { text-align: right; }
 @media (max-width: 900px) { .timeline-notes { grid-template-columns: 1fr; gap: 8px; } .timeline-note { min-height: auto; } }
+
+/* Bio-Editorial Atlas: the highlighted introduction area is a compact data plate, not empty whitespace. */
+.stem-snapshot { position: relative; overflow: hidden; margin: 26px 0 24px; padding: 15px 16px 13px; border: 1px solid color-mix(in srgb, var(--aqua) 23%, var(--border)); border-radius: 16px; background: linear-gradient(145deg, color-mix(in srgb, var(--aqua) 7%, var(--card)), color-mix(in srgb, var(--lime) 5%, var(--card))); box-shadow: 0 14px 28px color-mix(in srgb, var(--aqua) 8%, transparent), inset 0 1px 0 rgba(255,255,255,.5); }
+.stem-snapshot:before { content: ''; position: absolute; width: 150px; height: 150px; right: -72px; top: -90px; border: 1px solid color-mix(in srgb, var(--aqua) 25%, transparent); border-radius: 50%; box-shadow: 0 0 0 14px color-mix(in srgb, var(--aqua) 5%, transparent), 0 0 0 28px color-mix(in srgb, var(--aqua) 3%, transparent); }
+.snapshot-head { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid color-mix(in srgb, var(--aqua) 18%, var(--border)); }
+.snapshot-head span { color: var(--aqua); font: 700 9px 'IBM Plex Sans'; letter-spacing: .1em; }
+.snapshot-head b { color: var(--muted-foreground); font: 600 9px 'IBM Plex Sans'; letter-spacing: .06em; }
+.snapshot-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; padding: 13px 0; }
+.snapshot-grid > div { display: grid; grid-template-columns: 21px 1fr; gap: 7px; align-items: start; padding-inline-end: 7px; border-inline-end: 1px solid color-mix(in srgb, var(--aqua) 14%, var(--border)); }
+.snapshot-grid > div:last-child { border-inline-end: 0; }
+.snapshot-grid > div > span { color: var(--coral); font: 700 9px 'IBM Plex Sans'; }
+.snapshot-grid div div { display: grid; gap: 4px; }
+.snapshot-grid b { color: var(--foreground); font-size: 11px; line-height: 1.4; }
+.snapshot-grid p { margin: 0; color: var(--muted-foreground); font-size: 10px; line-height: 1.65; }
+.snapshot-foot { position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; padding-top: 9px; border-top: 1px dashed color-mix(in srgb, var(--aqua) 22%, var(--border)); color: var(--muted-foreground); font-size: 10px; line-height: 1.5; }
+.snapshot-foot i { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px color-mix(in srgb, var(--lime) 13%, transparent); }
+[dir="rtl"] .snapshot-head,[dir="rtl"] .snapshot-grid,[dir="rtl"] .snapshot-foot { text-align: right; }
+@media (max-width: 900px) { .stem-snapshot { margin: 22px 0; } }
+@media (max-width: 560px) { .snapshot-grid { grid-template-columns: 1fr; gap: 9px; }.snapshot-grid > div { grid-template-columns: 24px 1fr; padding: 8px 0; border-inline-end: 0; border-bottom: 1px solid color-mix(in srgb, var(--aqua) 13%, var(--border)); }.snapshot-grid > div:last-child { border-bottom: 0; } }

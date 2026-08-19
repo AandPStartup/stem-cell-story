@@ -19,3 +19,4 @@
 - [x] Add a second related bilingual data module about verifying cell identity and function inside the remaining highlighted gap only.
 - [x] Add a third related bilingual data module about functional maturity inside the final highlighted gap only.
 - [x] Align differentiation-stage dots to the connector line, add active glow, and expand stage descriptions.
+- [x] Give each differentiation stage a unique color for its dot, label, connector accent, and active glow.

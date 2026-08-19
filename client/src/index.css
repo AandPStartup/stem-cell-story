@@ -165,3 +165,20 @@ main { scroll-snap-type: y proximity; }
 [dir="rtl"] .snapshot-head,[dir="rtl"] .snapshot-grid,[dir="rtl"] .snapshot-foot { text-align: right; }
 @media (max-width: 900px) { .stem-snapshot { margin: 22px 0; } }
 @media (max-width: 560px) { .snapshot-grid { grid-template-columns: 1fr; gap: 9px; }.snapshot-grid > div { grid-template-columns: 24px 1fr; padding: 8px 0; border-inline-end: 0; border-bottom: 1px solid color-mix(in srgb, var(--aqua) 13%, var(--border)); }.snapshot-grid > div:last-child { border-bottom: 0; } }
+
+/* Bio-Editorial Atlas: a second research-check plate gives the remaining introduction gap a distinct purpose. */
+.stem-proof { position: relative; overflow: hidden; margin: 0 0 24px; padding: 14px 16px 13px; border: 1px solid color-mix(in srgb, var(--lime) 24%, var(--border)); border-radius: 16px; background: linear-gradient(145deg, color-mix(in srgb, var(--lime) 8%, var(--card)), color-mix(in srgb, var(--aqua) 5%, var(--card))); }
+.stem-proof:after { content: ''; position: absolute; width: 190px; height: 1px; right: -32px; bottom: 17px; transform: rotate(-23deg); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--lime) 50%, transparent), transparent); }
+.proof-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid color-mix(in srgb, var(--lime) 18%, var(--border)); }
+.proof-head span { color: #71852c; font: 700 9px 'IBM Plex Sans'; letter-spacing: .1em; }
+.proof-head b { color: var(--muted-foreground); font: 600 9px 'IBM Plex Sans'; letter-spacing: .05em; }
+.proof-track { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; padding: 13px 0 11px; }
+.proof-track:before { content: ''; position: absolute; top: 22px; left: 11%; right: 11%; height: 1px; background: linear-gradient(90deg, var(--aqua), var(--lime)); opacity: .48; }
+.proof-track > div { position: relative; display: grid; gap: 5px; }
+.proof-track i { position: relative; z-index: 1; width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; border: 2px solid var(--lime); background: var(--card); color: #71852c; font: 700 8px 'IBM Plex Sans'; font-style: normal; }
+.proof-track b { color: var(--foreground); font-size: 11px; }
+.proof-track p { margin: 0; color: var(--muted-foreground); font-size: 10px; line-height: 1.55; }
+.proof-foot { display: flex; align-items: center; gap: 8px; padding-top: 9px; border-top: 1px dashed color-mix(in srgb, var(--lime) 22%, var(--border)); color: var(--muted-foreground); font-size: 10px; line-height: 1.5; }
+.proof-foot span { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px color-mix(in srgb, var(--lime) 13%, transparent); }
+[dir="rtl"] .proof-head,[dir="rtl"] .proof-track,[dir="rtl"] .proof-foot { text-align: right; }
+@media (max-width: 560px) { .proof-track { grid-template-columns: 1fr; gap: 7px; }.proof-track:before { top: 18px; bottom: 18px; left: 9px; right: auto; width: 1px; height: auto; background: linear-gradient(var(--aqua), var(--lime)); }.proof-track > div { grid-template-columns: 25px 1fr; column-gap: 8px; }.proof-track i { grid-row: span 2; }.proof-track p { grid-column: 2; } }

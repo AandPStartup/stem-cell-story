@@ -16,3 +16,4 @@
 - [x] Replace the empty cell-fate area with an interactive bilingual scientific exploration module and verify it on desktop and mobile.
 - [x] Improve the differentiation-section layout density and fill empty space with purposeful interactive visual structure.
 - [x] Add only a bilingual data module inside the highlighted empty introduction area; preserve all other content.
+- [x] Add a second related bilingual data module about verifying cell identity and function inside the remaining highlighted gap only.

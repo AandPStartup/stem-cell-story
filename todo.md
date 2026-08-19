@@ -24,3 +24,4 @@
 - [x] Remove only the turquoise “از امید تا شواهد” treatment-plate button and preserve all surrounding content.
 - [x] Soften only the selected challenge button with rounded corners while preserving its behavior and surrounding content.
 - [x] Expand the selected treatment-challenge explanations in Persian and English while preserving the existing layout and controls.
+- [ ] Redesign the treatment-challenge area as an interactive bilingual research-gate experience while preserving existing content.

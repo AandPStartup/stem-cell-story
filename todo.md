@@ -23,4 +23,3 @@
 - [x] Refine only the selected timeline button with softer rounding and improved interaction effects; preserve surrounding content.
 - [x] Remove only the turquoise “از امید تا شواهد” treatment-plate button and preserve all surrounding content.
 - [x] Soften only the selected challenge button with rounded corners while preserving its behavior and surrounding content.
-- [x] Strengthen the selected challenge-button border in both themes and remove only the marked span.

@@ -150,12 +150,30 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
+function storagePlaceholderSvg(label: string): string {
+  const safe = label.replace(/[<>&"]/g, "");
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1728"/>
+      <stop offset="55%" stop-color="#0f9fb0"/>
+      <stop offset="100%" stop-color="#b9d36a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#g)"/>
+  <circle cx="820" cy="560" r="210" fill="none" stroke="rgba(234,244,243,.35)" stroke-width="2"/>
+  <circle cx="820" cy="560" r="120" fill="rgba(234,244,243,.12)" stroke="rgba(234,244,243,.55)" stroke-width="2"/>
+  <text x="80" y="1100" fill="rgba(234,244,243,.85)" font-family="IBM Plex Sans, Arial, sans-serif" font-size="36">${safe}</text>
+</svg>`;
+}
+
 function vitePluginStorageProxy(): Plugin {
   return {
     name: "manus-storage-proxy",
     configureServer(server: ViteDevServer) {
       server.middlewares.use("/manus-storage", async (req, res) => {
-        const key = req.url?.replace(/^\//, "");
+        const key = req.url?.replace(/^\//, "") || "";
         if (!key) {
           res.writeHead(400, { "Content-Type": "text/plain" });
           res.end("Missing storage key");
@@ -165,9 +183,17 @@ function vitePluginStorageProxy(): Plugin {
         const forgeBaseUrl = (process.env.BUILT_IN_FORGE_API_URL || "").replace(/\/+$/, "");
         const forgeKey = process.env.BUILT_IN_FORGE_API_KEY;
 
+        const sendPlaceholder = () => {
+          const svg = storagePlaceholderSvg(key.split("/").pop() || "cell-story");
+          res.writeHead(200, {
+            "Content-Type": "image/svg+xml; charset=utf-8",
+            "Cache-Control": "no-store",
+          });
+          res.end(svg);
+        };
+
         if (!forgeBaseUrl || !forgeKey) {
-          res.writeHead(500, { "Content-Type": "text/plain" });
-          res.end("Storage proxy not configured");
+          sendPlaceholder();
           return;
         }
 
@@ -180,23 +206,20 @@ function vitePluginStorageProxy(): Plugin {
           });
 
           if (!forgeResp.ok) {
-            res.writeHead(502, { "Content-Type": "text/plain" });
-            res.end("Storage backend error");
+            sendPlaceholder();
             return;
           }
 
           const { url } = (await forgeResp.json()) as { url: string };
           if (!url) {
-            res.writeHead(502, { "Content-Type": "text/plain" });
-            res.end("Empty signed URL");
+            sendPlaceholder();
             return;
           }
 
           res.writeHead(307, { Location: url, "Cache-Control": "no-store" });
           res.end();
         } catch {
-          res.writeHead(502, { "Content-Type": "text/plain" });
-          res.end("Storage proxy error");
+          sendPlaceholder();
         }
       });
     },

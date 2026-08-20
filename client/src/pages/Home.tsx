@@ -1,13 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ElementType } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowUp, ArrowUpRight, Check, ChevronDown, Globe2, Moon, Sun, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpRight, ChevronDown, Globe2, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import QuizExam from "@/components/QuizExam";
+import FadeCarousel from "@/components/FadeCarousel";
 
 const ASSETS = {
   hero: "/images/hero-stem-cell.jpg",
   differentiation: "/images/differentiation-pathways.jpg",
   ips: "/images/ips-reprogramming.jpg",
+  ipsFactors: "/images/ips-factors.jpg",
+  ipsModeling: "/images/ips-modeling.jpg",
+  ipsDirected: "/images/ips-directed.jpg",
   tissue: "/images/tissue-regeneration.jpg",
+  challengeIntegration: "/images/challenge-integration.jpg",
+  challengeImmunity: "/images/challenge-immunity.jpg",
+  challengePurity: "/images/challenge-purity.jpg",
+  challengeTumor: "/images/challenge-tumor-risk.jpg",
+  challengeScale: "/images/challenge-scale.jpg",
+  evidenceLab: "/images/evidence-lab.jpg",
+  evidencePreclinical: "/images/evidence-preclinical.jpg",
+  evidenceClinical: "/images/evidence-clinical.jpg",
   mark: "/images/cell-mark.jpg",
 };
 
@@ -38,23 +51,34 @@ const copy = {
     challengeTitle: "از آزمایشگاه تا درمان؛ چرا مسیر آسان نیست؟",
     challengeIntro: "امید علمی وقتی به درمان نزدیک می‌شود که از چندین دروازه‌ی ایمنی، کیفیت و شواهد عبور کند.",
     gapTitle: "فاصله‌ی میان امید و درمان",
+    gapIntro:
+      "هر ایده‌ی سلولی باید از سه ایستگاه عبور کند: امکان آزمایشگاهی، شواهد ایمنی پیش‌بالینی، و تأیید انسانی. پرش از این مسیر، امید را به ادعا تبدیل می‌کند نه درمان.",
     lab: "امید آزمایشگاهی",
     preclinical: "شواهد پیش‌بالینی",
     validated: "درمان تأییدشده",
+    gapNoteTitle: "نکته‌ی کلیدی مسیر ترجمه",
+    gapNote:
+      "بیشتر شکست‌ها در همین فاصله رخ می‌دهد: سلول در ظرف کشت خوب کار می‌کند، اما در بدن بیمار باید زنده بماند، ایمن باشد، ادغام شود و اثر پایدار نشان دهد.",
     ipsTitle: "وقتی یک سلول بالغ، فرصت بازگشت پیدا می‌کند",
     ipsIntro: "iPSها انعطاف‌پذیری را به سلول‌های انسانی بازمی‌گردانند.",
     ipsBody:
       "پژوهشگران می‌توانند یک سلول بالغ، مانند سلول پوست، را به حالت پرتوان القایی بازبرنامه‌ریزی کنند؛ سپس آن را برای ساخت مدل بیماری، آزمون دارو و پژوهش درباره‌ی سلول‌های جایگزین هدایت کنند.",
+    ipsHowTitle: "بازبرنامه‌ریزی چگونه کار می‌کند؟",
+    ipsHowIntro: "ایده‌ی اصلی ساده است: چند فاکتور کلیدی، برنامه‌ی ژنی سلول بالغ را به حالت پرتوان بازمی‌گردانند.",
+    ipsUsesTitle: "iPSها چه کارهایی می‌کنند؟",
+    ipsUsesIntro: "کاربردشان بیش از یک تصویر آزمایشگاهی است؛ سه مسیر پژوهشی اصلی دارند.",
     why: "چرا مهم است؟",
     whyBody:
       "کار بهاروند و همکارانش در مسیر تثبیت و پیشبرد پژوهش سلول‌های iPS انسانی در ایران اهمیت داشت: این کار نشان داد که می‌توان از سلول‌های بالغ انسانی به یک منبع انعطاف‌پذیر برای مطالعه و تمایز سلولی رسید. این دستاورد یک امکان پژوهشی و درمانی ساخت، نه یک درمان تضمین‌شده.",
     quizTitle: "روایت را خودتان تعریف کنید",
-    quizIntro: "سه پرسش کوتاه برای اینکه ببینیم ایده‌ی اصلی را گرفته‌اید.",
-    next: "پرسش بعدی",
-    finish: "پایان روایت",
+    quizIntro: "سطح دشواری را انتخاب کنید، آزمون تصادفی بدهید و در پایان تحلیل عملکردتان را ببینید.",
     sources: "منابع و مسیر مطالعه",
     closing: "علم فقط پاسخ نیست؛ راهی است برای پرسیدن بهتر، آزمودن دقیق‌تر و امید بستن مسئولانه.",
     footer: "یک روایت تعاملی برای فهم بهتر زیست‌شناسی سلول‌های بنیادی",
+    createdByPrefix: "ساخته‌شده توسط",
+    createdByAnd: "و",
+    nameArshia: "عرشیا فراهانی",
+    nameParsa: "پارسا خسروانی",
     correct: "آفرین؛ دلیلش این است:",
     almost: "نزدیک بود؛ نکته‌ی مهم این است:",
     simpleMode: "ساده",
@@ -84,23 +108,34 @@ const copy = {
     challengeTitle: "From laboratory to treatment: why is the path difficult?",
     challengeIntro: "Scientific promise moves toward treatment only after passing gates of safety, quality, evidence, and oversight.",
     gapTitle: "The distance between promise and treatment",
+    gapIntro:
+      "Every cell idea must pass three stations: lab possibility, preclinical safety evidence, and human validation. Skipping that path turns hope into a claim, not a therapy.",
     lab: "Laboratory promise",
     preclinical: "Preclinical evidence",
     validated: "Validated treatment",
+    gapNoteTitle: "Key translation insight",
+    gapNote:
+      "Most failures happen in this gap: a cell works in culture, but in a patient it must survive, stay safe, integrate, and show durable benefit.",
     ipsTitle: "When a mature cell gets a chance to return",
     ipsIntro: "iPS cells return flexibility to human cells.",
     ipsBody:
       "Researchers can reprogram a mature cell, such as a skin cell, into an induced pluripotent state, then guide it toward disease models, drug testing, and research on replacement cells.",
+    ipsHowTitle: "How does reprogramming work?",
+    ipsHowIntro: "The core idea is clear: a few key factors reset an adult cell’s gene program toward pluripotency.",
+    ipsUsesTitle: "What do iPS cells do?",
+    ipsUsesIntro: "Their value goes beyond a lab image; three research routes stand out.",
     why: "Why it matters",
     whyBody:
       "Baharvand and colleagues’ work helped establish and advance human iPS-cell research in Iran. It showed the value of turning accessible adult cells into a flexible resource for studying and directing cell fate. That created a research and therapeutic possibility—not a guaranteed treatment.",
     quizTitle: "Tell the story yourself",
-    quizIntro: "Three short questions to check the core ideas.",
-    next: "Next question",
-    finish: "Finish the story",
+    quizIntro: "Choose a difficulty, take a randomized quiz, and review your performance insights at the end.",
     sources: "Sources for further reading",
     closing: "Science is not only about answers; it is a way to ask better questions, test more carefully, and hope responsibly.",
     footer: "An interactive story for understanding stem-cell biology",
+    createdByPrefix: "Created by",
+    createdByAnd: "and",
+    nameArshia: "Arshia Farahani",
+    nameParsa: "Parsa Khosravani",
     correct: "Correct — here is why:",
     almost: "Almost — the important point is:",
     simpleMode: "Simple",
@@ -352,33 +387,255 @@ const fateDetails = {
 
 const challenges = {
   fa: [
-    ["کنترل تمایز", "باید سلول هدف را به‌طور قابل اعتماد تولید کرد و سلول‌های ناخواسته را به حداقل رساند.", "تغییر کوچک در پیام‌های محیطی می‌تواند مسیر سلول را عوض کند.", "برای ارزیابی، نشانگرهای هویتی، درصد خلوص و رفتار سلول بررسی می‌شود."],
-    ["ایمنی و رد پیوند", "سیستم ایمنی ممکن است سلول‌های پیوندشده را بیگانه بداند.", "سازگاری ایمنی و پایش طولانی‌مدت بخشی از مسیر ارزیابی است.", "منبع سلول و وضعیت گیرنده می‌توانند پاسخ ایمنی را تغییر دهند."],
-    ["خطر تومورزایی", "سلول‌های پرتوان باقی‌مانده می‌توانند خطر ایجاد تومور داشته باشند.", "خالص‌سازی و کنترل کیفیت برای کاهش این خطر لازم‌اند.", "پایداری ژنتیکی و رفتار پس از انتقال باید بررسی شود."],
-    ["بقا و ادغام", "سلول‌های منتقل‌شده باید زنده بمانند و با بافت اطراف ارتباط برقرار کنند.", "رسیدن به بافت فقط آغاز پرسش است؛ عملکرد پایدار اهمیت دارد.", "خون‌رسانی و پیام‌های بافتی تعیین می‌کنند اثر کوتاه‌مدت بماند یا پایدار شود."],
-    ["مقیاس‌پذیری و کیفیت", "تولید باید استریل، قابل تکرار و از یک دسته به دسته‌ی دیگر سازگار باشد.", "آنچه در آزمایش کوچک کار می‌کند لزوماً در مقیاس درمانی پایدار نیست.", "مستندسازی و آزمون آزادسازی برای هر دسته ضروری است."],
-    ["شواهد بالینی و اخلاق", "نتیجه‌ی آزمایشگاهی با درمان اثبات‌شده یکی نیست.", "اعتماد علمی با شفافیت و پیگیری طولانی‌مدت ساخته می‌شود.", "فایده باید از خطرها بیشتر باشد؛ پاسخ از داده‌ی انسانی می‌آید."],
+    {
+      title: "کنترل تمایز",
+      summary: "باید سلول هدف را به‌طور قابل اعتماد تولید کرد و سلول‌های ناخواسته را به حداقل رساند.",
+      why: "چرا این دروازه مهم است؟",
+      whyBody: "تمایز یک مسیر خطی ساده نیست. پیام‌های مولکولی، زمان‌بندی، تراکم سلولی و ترکیب محیط کشت می‌توانند خروجی را عوض کنند.",
+      mechanism: "درون سلول چه رخ می‌دهد؟",
+      mechanismBody: "شبکه‌های ژنی رقیب برای هویت‌های مختلف فعال می‌شوند. اگر کنترل ناقص باشد، مخلوطی از سلول‌های درست و نادرست شکل می‌گیرد.",
+      checksTitle: "چه چیزهایی باید سنجیده شود؟",
+      checks: [
+        "نشانگرهای هویت سلول هدف و نبود نشانگرهای ناخواسته",
+        "درصد خلوص جمعیت نهایی",
+        "پایداری فنوتیپ در چند نقطه زمانی",
+        "آزمون عملکرد مرتبط با نقش زیستی هدف",
+      ],
+      takeaway: "یک تصویر زیبا کافی نیست؛ کنترل تمایز یعنی تکرارپذیری + خلوص + عملکرد.",
+    },
+    {
+      title: "ایمنی و رد پیوند",
+      summary: "سیستم ایمنی ممکن است سلول‌های پیوندشده را بیگانه بداند.",
+      why: "چرا این دروازه مهم است؟",
+      whyBody: "حتی اگر سلول‌ها در ظرف آزمایشگاهی عالی کار کنند، بدن گیرنده ممکن است آن‌ها را مهاجم تشخیص دهد و حذف کند.",
+      mechanism: "پاسخ ایمنی چگونه شکل می‌گیرد؟",
+      mechanismBody: "مولکول‌های سطحی، منبع سلول (اتولوگ یا آلوژنیک)، التهاب موضعی و وضعیت ایمنی بیمار همگی شدت رد را تغییر می‌دهند.",
+      checksTitle: "چه چیزهایی باید سنجیده شود؟",
+      checks: [
+        "سازگاری ایمنی میان سلول و گیرنده",
+        "نیاز یا عدم نیاز به سرکوب ایمنی",
+        "پایش طولانی‌مدت بقا و التهاب",
+        "خطر واکنش‌های ایمنی پیش‌بینی‌نشده",
+      ],
+      takeaway: "منبع سلول و وضعیت گیرنده می‌توانند پاسخ ایمنی را تغییر دهند؛ بدون پایش، اثر کوتاه‌مدت گمراه‌کننده است.",
+    },
+    {
+      title: "خطر تومورزایی",
+      summary: "سلول‌های پرتوان باقی‌مانده می‌توانند خطر ایجاد تومور داشته باشند.",
+      why: "چرا این دروازه مهم است؟",
+      whyBody: "توان رشد و انعطاف سلول‌های پرتوان، همان ویژگی مفیدی است که اگر کنترل نشود به رشد ناخواسته منجر می‌شود.",
+      mechanism: "ریشه خطر کجاست؟",
+      mechanismBody: "باقی‌ماندن سلول‌های پرتوان، ناپایداری ژنتیکی، یا جمعیت‌های غیرطبیعی می‌توانند پس از انتقال رشد کنترل‌نشده ایجاد کنند.",
+      checksTitle: "چه چیزهایی باید سنجیده شود؟",
+      checks: [
+        "حذف یا خالص‌سازی سلول‌های پرتوان ناخواسته",
+        "آزمون‌های پایداری کروموزومی و ژنتیکی",
+        "بررسی رفتار رشد پس از پیوند در مدل‌های ایمنی",
+        "معیارهای آزادسازی محصول قبل از کاربرد انسانی",
+      ],
+      takeaway: "ایمنی یعنی لایه‌های متعدد کنترل؛ یک آزمون تکی جایگزین پایش چندمرحله‌ای نیست.",
+    },
+    {
+      title: "بقا و ادغام",
+      summary: "سلول‌های منتقل‌شده باید زنده بمانند و با بافت اطراف ارتباط برقرار کنند.",
+      why: "چرا این دروازه مهم است؟",
+      whyBody: "رساندن سلول به محل هدف فقط آغاز کار است. بدون بقا و اتصال عملکردی، اثر درمانی پایدار شکل نمی‌گیرد.",
+      mechanism: "چه عواملی بقا را تعیین می‌کنند؟",
+      mechanismBody: "خون‌رسانی، هیپوکسی، التهاب، پیام‌های ماتریکس و ارتباط با سلول‌های همسایه تعیین می‌کنند سلول فقط زنده بماند یا واقعاً ادغام شود.",
+      checksTitle: "چه چیزهایی باید سنجیده شود؟",
+      checks: [
+        "نرخ بقای سلول پس از انتقال",
+        "جایگیری درست در بافت هدف",
+        "برقراری ارتباط ساختاری یا سیگنالی با محیط",
+        "دوام عملکرد در بازه‌های زمانی طولانی‌تر",
+      ],
+      takeaway: "اثر کوتاه‌مدت با عملکرد پایدار یکی نیست؛ ادغام بافتی معیار اصلی است.",
+    },
+    {
+      title: "مقیاس‌پذیری و کیفیت",
+      summary: "تولید باید استریل، قابل تکرار و از یک دسته به دسته‌ی دیگر سازگار باشد.",
+      why: "چرا این دروازه مهم است؟",
+      whyBody: "موفقیت در مقیاس آزمایشگاهی کوچک لزوماً در تولید انبوه تکرار نمی‌شود؛ تغییر مواد، زمان و تجهیزات کیفیت را جابه‌جا می‌کند.",
+      mechanism: "در مقیاس بزرگ چه عوض می‌شود؟",
+      mechanismBody: "تفاوت بچه‌مواد اولیه، شرایط بیورآکتور، زمان کشت و مراحل انجماد می‌تواند خلوص و عملکرد را تغییر دهد.",
+      checksTitle: "چه چیزهایی باید سنجیده شود؟",
+      checks: [
+        "استانداردسازی پروتکل تولید",
+        "مستندسازی کامل هر دسته",
+        "آزمون آزادسازی هویت، خلوص و ایمنی",
+        "پایداری محصول در نگهداری و حمل",
+      ],
+      takeaway: "درمان قابل اعتماد به تولید قابل ردیابی نیاز دارد، نه فقط یک آزمایش موفق.",
+    },
+    {
+      title: "شواهد بالینی و اخلاق",
+      summary: "نتیجه‌ی آزمایشگاهی با درمان اثبات‌شده یکی نیست.",
+      why: "چرا این دروازه مهم است؟",
+      whyBody: "امید علمی باید از مسیر کارآزمایی، رضایت آگاهانه، نظارت مستقل و گزارش شفاف عبور کند تا به اعتماد عمومی برسد.",
+      mechanism: "چه پرسشی باید پاسخ داده شود؟",
+      mechanismBody: "آیا فایده‌ی احتمالی از خطرها بیشتر است؟ پاسخ فقط با داده‌ی انسانی، معیارهای ازپیش‌تعیین‌شده و پیگیری بلندمدت معتبر می‌شود.",
+      checksTitle: "چه چیزهایی باید سنجیده شود؟",
+      checks: [
+        "طراحی کارآزمایی با پیامدهای مشخص",
+        "فرآیند رضایت آگاهانه و حمایت از شرکت‌کننده",
+        "نظارت اخلاقی و گزارش عوارض",
+        "شفافیت نتایج مثبت و منفی",
+      ],
+      takeaway: "اعتماد علمی با شفافیت ساخته می‌شود؛ ادعا بدون شواهد، ترجمه‌ی مسئولانه نیست.",
+    },
   ],
   en: [
-    ["Controlled differentiation", "Researchers must reliably produce the intended cell type and minimize unwanted cells.", "Small changes in signals can redirect a cell, so control matters.", "Identity markers, purity, and behavior are checked across stages."],
-    ["Immunity and rejection", "The immune system may attack transplanted cells.", "Immune compatibility and long-term monitoring are part of translation.", "Cell source and the recipient’s biology can change the immune response."],
-    ["Tumor risk", "Remaining pluripotent or abnormal cells may create a tumor risk.", "Purification and quality control are essential.", "Genetic stability and post-transplant behavior must be assessed."],
-    ["Survival and integration", "Transplanted cells must survive and connect with surrounding tissue.", "Reaching a tissue is only the beginning; durable function matters.", "Blood supply and tissue cues help determine whether an effect becomes stable."],
-    ["Scale and quality", "Manufacturing must be sterile, reproducible, and consistent across batches.", "What works in a small experiment may not remain stable at clinical scale.", "Documentation and release testing are needed for every batch."],
-    ["Clinical evidence and ethics", "A promising laboratory result is not a proven treatment.", "Scientific trust is built through transparency and follow-up.", "Potential benefit must outweigh risk, based on human data."],
+    {
+      title: "Controlled differentiation",
+      summary: "Researchers must reliably produce the intended cell type and minimize unwanted cells.",
+      why: "Why this gate matters",
+      whyBody: "Differentiation is not a simple straight line. Molecular cues, timing, density, and media composition can change the outcome.",
+      mechanism: "What happens inside the process?",
+      mechanismBody: "Competing gene networks for different identities become active. Incomplete control yields a mix of desired and undesired cells.",
+      checksTitle: "What must be measured?",
+      checks: [
+        "Identity markers for the target cell and absence of unwanted markers",
+        "Final population purity",
+        "Phenotype stability across timepoints",
+        "Functional assays linked to the intended biological role",
+      ],
+      takeaway: "A beautiful image is not enough; control means reproducibility + purity + function.",
+    },
+    {
+      title: "Immunity and rejection",
+      summary: "The immune system may attack transplanted cells.",
+      why: "Why this gate matters",
+      whyBody: "Even excellent lab-made cells can be recognized as foreign and cleared by the recipient’s immune system.",
+      mechanism: "How does the immune response form?",
+      mechanismBody: "Surface molecules, cell source (autologous vs allogeneic), local inflammation, and patient immune status all shape rejection risk.",
+      checksTitle: "What must be measured?",
+      checks: [
+        "Immune compatibility between cells and recipient",
+        "Need for immunosuppression or not",
+        "Long-term monitoring of survival and inflammation",
+        "Risk of unexpected immune reactions",
+      ],
+      takeaway: "Cell source and recipient biology can change immune response; without follow-up, short-term effects mislead.",
+    },
+    {
+      title: "Tumor risk",
+      summary: "Remaining pluripotent or abnormal cells may create a tumor risk.",
+      why: "Why this gate matters",
+      whyBody: "The same growth flexibility that makes pluripotent cells useful can become dangerous if leftover cells persist.",
+      mechanism: "Where does the risk come from?",
+      mechanismBody: "Residual pluripotent cells, genetic instability, or abnormal populations can grow uncontrollably after transfer.",
+      checksTitle: "What must be measured?",
+      checks: [
+        "Removal or purification of unwanted pluripotent cells",
+        "Chromosomal and genetic stability tests",
+        "Post-transplant growth behavior in safety models",
+        "Product release criteria before human use",
+      ],
+      takeaway: "Safety needs layered checks; one test cannot replace multi-step monitoring.",
+    },
+    {
+      title: "Survival and integration",
+      summary: "Transplanted cells must survive and connect with surrounding tissue.",
+      why: "Why this gate matters",
+      whyBody: "Delivering cells to a target site is only the start. Without survival and functional connection, durable benefit does not form.",
+      mechanism: "What determines survival?",
+      mechanismBody: "Blood supply, hypoxia, inflammation, matrix cues, and neighbor-cell contact decide whether cells merely persist or truly integrate.",
+      checksTitle: "What must be measured?",
+      checks: [
+        "Post-transfer cell survival rate",
+        "Correct localization in target tissue",
+        "Structural or signaling connection with the niche",
+        "Durable function over longer time windows",
+      ],
+      takeaway: "A short-lived effect is not durable function; tissue integration is the key criterion.",
+    },
+    {
+      title: "Scale and quality",
+      summary: "Manufacturing must be sterile, reproducible, and consistent across batches.",
+      why: "Why this gate matters",
+      whyBody: "Success in a small lab culture does not automatically scale; materials, timing, and equipment introduce variation.",
+      mechanism: "What changes at larger scale?",
+      mechanismBody: "Lot-to-lot materials, bioreactor conditions, culture duration, and freezing steps can alter purity and performance.",
+      checksTitle: "What must be measured?",
+      checks: [
+        "Standardized manufacturing protocols",
+        "Full documentation for every batch",
+        "Release testing for identity, purity, and safety",
+        "Product stability during storage and transport",
+      ],
+      takeaway: "Trusted treatment needs traceable production, not only one successful experiment.",
+    },
+    {
+      title: "Clinical evidence and ethics",
+      summary: "A promising laboratory result is not a proven treatment.",
+      why: "Why this gate matters",
+      whyBody: "Scientific hope must pass through trials, informed consent, independent oversight, and transparent reporting to earn public trust.",
+      mechanism: "What question must be answered?",
+      mechanismBody: "Does likely benefit outweigh risk? That answer is credible only with human data, predefined endpoints, and long-term follow-up.",
+      checksTitle: "What must be measured?",
+      checks: [
+        "Trial design with clear outcomes",
+        "Informed-consent process and participant protection",
+        "Ethical oversight and adverse-event reporting",
+        "Transparency for both positive and negative results",
+      ],
+      takeaway: "Scientific trust is built through transparency; claims without evidence are not responsible translation.",
+    },
   ],
 };
 
-const quiz = {
+const evidenceStages = {
   fa: [
-    { q: "کدام عبارت سلول بنیادی را بهتر توصیف می‌کند؟", options: ["سلولی که همیشه همه‌چیز می‌شود", "سلولی با توان خودنوزایی و تولید سلول‌های تخصصی‌تر", "سلولی که فقط در جنین وجود دارد"], answer: 1, explain: "سلول بنیادی با دو ویژگی شناخته می‌شود: خودنوزایی و توانایی تمایز در شرایط مناسب." },
-    { q: "چرا ساخت سلول هدف به‌تنهایی درمان را تضمین نمی‌کند؟", options: ["چون ایمنی، بقا، کیفیت و شواهد بالینی هم باید بررسی شوند", "چون سلول‌ها هرگز قابل استفاده نیستند", "چون آزمایشگاه به بدن انسان شباهت ندارد"], answer: 0, explain: "مسیر درمان به ایمنی، عملکرد، تولید استاندارد و شواهد انسانی نیاز دارد." },
-    { q: "اهمیت مفهومی iPSها چیست؟", options: ["سلول بالغ را به منبعی انعطاف‌پذیر برای پژوهش تبدیل می‌کنند", "همه‌ی بیماری‌ها را درمان کرده‌اند", "جایگزین کامل کارآزمایی بالینی هستند"], answer: 0, explain: "iPSها امکان مدل‌سازی بیماری، آزمون دارو و پژوهش درباره‌ی تمایز سلولی را گسترش می‌دهند." },
+    {
+      title: "امید آزمایشگاهی",
+      focus: "ایده و امکان",
+      body: "در این مرحله پژوهشگر نشان می‌دهد که ساخت یا هدایت سلول هدف از نظر زیستی ممکن است: نشانگرهای هویت، شکل کلنی، و رفتار اولیه‌ی تمایز ثبت می‌شود.",
+      checks: ["تعریف دقیق جمعیت سلولی", "اثبات خودنوزایی یا تمایز هدایت‌شده", "مستندسازی روش و تکرارپذیری"],
+      img: ASSETS.evidenceLab,
+      alt: "پژوهش آزمایشگاهی روی کشت سلول‌های بنیادی",
+    },
+    {
+      title: "شواهد پیش‌بالینی",
+      focus: "آزمون و ایمنی",
+      body: "اینجا سؤال عوض می‌شود: آیا محصول در مدل‌های حیوانی یا سامانه‌های معادل، ایمن و تا حدی مؤثر است؟ خلوص، دوز، و ریسک رشد کنترل‌نشده بررسی می‌شود.",
+      checks: ["آزمون سمیت و تومورزایی", "ارزیابی بقا و عملکرد در بافت هدف", "کنترل کیفیت ساخت و خلوص"],
+      img: ASSETS.evidencePreclinical,
+      alt: "آزمون‌های ایمنی و کیفیت پیش‌بالینی",
+    },
+    {
+      title: "درمان تأییدشده",
+      focus: "شواهد انسانی",
+      body: "تنها پس از کارآزمایی‌های طراحی‌شده، پایش عوارض، و تأیید نظارتی می‌توان از درمان صحبت کرد؛ نه فقط از امید علمی یا تصویر آزمایشگاهی.",
+      checks: ["کارآزمایی با نقاط پایانی مشخص", "پیگیری بلندمدت ایمنی و اثربخشی", "شفافیت نتایج مثبت و منفی"],
+      img: ASSETS.evidenceClinical,
+      alt: "مسیر بالینی و پزشکی بازساختی",
+    },
   ],
   en: [
-    { q: "Which statement best describes a stem cell?", options: ["A cell that always becomes everything", "A cell with self-renewal and the ability to produce more specialized cells", "A cell found only in embryos"], answer: 1, explain: "Stem cells are defined by self-renewal and the capacity to differentiate under the right conditions." },
-    { q: "Why does making the desired cell not guarantee a treatment?", options: ["Safety, survival, quality, and clinical evidence must also be evaluated", "Cells can never be used", "A laboratory is identical to the human body"], answer: 0, explain: "Translation also requires safety, function, standardized manufacturing, and human evidence." },
-    { q: "What is the conceptual importance of iPS cells?", options: ["They turn mature cells into a flexible research resource", "They have already cured every disease", "They replace clinical trials"], answer: 0, explain: "iPS cells expand disease modelling, drug testing, and research into controlled differentiation." },
+    {
+      title: "Laboratory promise",
+      focus: "Idea and possibility",
+      body: "Researchers first show that making or guiding the target cell is biologically possible: identity markers, colony behavior, and early differentiation are documented.",
+      checks: ["Define the cell population clearly", "Show self-renewal or directed differentiation", "Document methods and reproducibility"],
+      img: ASSETS.evidenceLab,
+      alt: "Laboratory research with stem-cell cultures",
+    },
+    {
+      title: "Preclinical evidence",
+      focus: "Testing and safety",
+      body: "The question shifts: is the product reasonably safe and partly effective in animal or equivalent models? Purity, dose, and uncontrolled-growth risk are examined.",
+      checks: ["Toxicity and tumorigenicity assays", "Survival and function in target tissue", "Manufacturing quality and purity controls"],
+      img: ASSETS.evidencePreclinical,
+      alt: "Preclinical safety and quality testing",
+    },
+    {
+      title: "Validated treatment",
+      focus: "Human evidence",
+      body: "Only after designed trials, adverse-event monitoring, and regulatory approval can we speak of therapy—not merely of scientific hope or a lab image.",
+      checks: ["Trials with predefined endpoints", "Long-term safety and efficacy follow-up", "Transparent positive and negative results"],
+      img: ASSETS.evidenceClinical,
+      alt: "Clinical regenerative-medicine pathway",
+    },
   ],
 };
 
@@ -445,6 +702,74 @@ function AppHeader({
   );
 }
 
+function TypeFadeText({
+  text,
+  as: Tag = "span",
+  className,
+  delay = 0,
+  speed = 34,
+  showCaret = true,
+  active = true,
+  onDone,
+}: {
+  text: string;
+  as?: ElementType;
+  className?: string;
+  delay?: number;
+  speed?: number;
+  showCaret?: boolean;
+  active?: boolean;
+  onDone?: () => void;
+}) {
+  const reduced = useReducedMotion();
+  const [count, setCount] = useState(reduced || !active ? text.length : 0);
+  const done = count >= text.length;
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
+
+  useEffect(() => {
+    if (!active) {
+      setCount(0);
+      return;
+    }
+    if (reduced) {
+      setCount(text.length);
+      onDoneRef.current?.();
+      return;
+    }
+
+    setCount(0);
+    let index = 0;
+    let intervalId: ReturnType<typeof setInterval> | undefined;
+    const timeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        index += 1;
+        setCount(index);
+        if (index >= text.length) {
+          clearInterval(intervalId);
+          onDoneRef.current?.();
+        }
+      }, speed);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [text, delay, speed, reduced, active]);
+
+  return (
+    <Tag className={className} aria-label={text}>
+      {text.slice(0, count).split("").map((char, i) => (
+        <span key={`${text}-${i}`} className="type-char">
+          {char}
+        </span>
+      ))}
+      {showCaret && active && !done && !reduced && <span className="type-caret" aria-hidden />}
+    </Tag>
+  );
+}
+
 export default function Home() {
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem("cell-story-lang") as Lang) || "fa");
   const { theme, toggleTheme } = useTheme();
@@ -453,11 +778,12 @@ export default function Home() {
   const [deep, setDeep] = useState(false);
   const [timelineIndex, setTimelineIndex] = useState(0);
   const [openChallenge, setOpenChallenge] = useState<number | null>(0);
-  const [quizIndex, setQuizIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [heroPhase, setHeroPhase] = useState(0);
   const reduced = useReducedMotion();
   const t = copy[lang];
   const direction = lang === "fa" ? "rtl" : "ltr";
+  const brandLabel = lang === "fa" ? "روایت سلول" : "Cell Story";
+  const titleLines = t.title.split("\n");
   const fade = reduced
     ? {}
     : {
@@ -472,6 +798,7 @@ export default function Home() {
     document.documentElement.lang = lang === "fa" ? "fa" : "en";
     document.documentElement.dir = direction;
     setSelectedStage(null);
+    setHeroPhase(0);
   }, [lang, direction]);
 
   const scrollTo = (id: string) =>
@@ -481,18 +808,118 @@ export default function Home() {
   const timelineDetails =
     lang === "fa"
       ? [
-          { title: "پتانسیل باز", body: "سلول هنوز چند مسیر تخصصی را پیش روی خود دارد و می‌تواند با حفظ توان پرتوانی، نسخه‌های بیشتری از خود بسازد.", cue: "هنوز چند امکان هم‌زمان باز است." },
-          { title: "پیام‌های محیطی", body: "مولکول‌های پیام‌رسان، تماس با سلول‌های اطراف و ماتریکس بافتی مسیر را جهت می‌دهند.", cue: "محیط، انتخاب‌ها را جهت می‌دهد." },
-          { title: "برنامه‌ی ژنی", body: "برخی ژن‌ها فعال و برخی خاموش می‌شوند و هویت آینده‌ی سلول را شکل می‌دهند.", cue: "هویت تازه از درون سلول ساخته می‌شود." },
-          { title: "سلول پیش‌ساز", body: "سلول وارد مرحله‌ی میانی می‌شود؛ انعطاف کمتر، اما مسیر مشخص‌تر.", cue: "مسیر محدودتر، اما مشخص‌تر می‌شود." },
-          { title: "سلول تخصصی", body: "ساختار و عملکرد با نقش نهایی هم‌راستا می‌شوند.", cue: "هویت، ساختار و عملکرد هم‌راستا می‌شوند." },
+          {
+            title: "پتانسیل باز",
+            body: "در این ایستگاه، سلول هنوز هویت نهایی ندارد؛ هم می‌تواند خود را نوسازی کند و هم چند مسیر تمایز را باز نگه دارد.",
+            cue: "هنوز چند امکان هم‌زمان باز است.",
+            points: [
+              "پرتوانی یعنی سلول می‌تواند به رده‌های سلولی متعددی وارد شود، نه فقط یک مسیر ثابت.",
+              "خودنوزایی، ذخیره سلولی را حفظ می‌کند تا منبع پژوهش یا درمان تمام نشود.",
+              "نشانگرهای پرتوانی و ریخت‌شناسی کلونی برای تأیید این مرحله ضروری‌اند.",
+              "هر هدایت بعدی باید کنترل‌شده باشد؛ در غیر این صورت مسیرهای ناخواسته فعال می‌شوند.",
+            ],
+          },
+          {
+            title: "پیام‌های محیطی",
+            body: "محیط بیرون از هسته—مولکول‌ها، تماس سلولی و ماتریکس—به سلول می‌گوید کدام مسیر را جدی‌تر دنبال کند.",
+            cue: "محیط، انتخاب‌ها را جهت می‌دهد.",
+            points: [
+              "سیگنال‌های پاراکرین و اندوکرین (مثل فاکتورهای رشد) مسیر تمایز را سوگیری می‌کنند.",
+              "تماس سلول-سلول و اتصالات پیوندگاهی اطلاعات موضعی محیط را منتقل می‌کنند.",
+              "سختی و ترکیب ماتریکس خارج‌سلولی بر رفتار مکانیکی و سرنوشت سلول اثر می‌گذارد.",
+              "در آزمایشگاه، تغییر غلظت یا زمان‌بندی پیام‌ها می‌تواند خروجی تمایز را عوض کند.",
+            ],
+          },
+          {
+            title: "برنامه‌ی ژنی",
+            body: "هویت تازه عمدتاً از بازآرایی بیان ژن ساخته می‌شود: بعضی شبکه‌ها روشن و بعضی خاموش می‌شوند.",
+            cue: "هویت تازه از درون سلول ساخته می‌شود.",
+            points: [
+              "فاکتورهای رونویسی کلیدی، مدارهای ژنی مربوط به یک رده سلولی را پایدار می‌کنند.",
+              "تغییرات اپی‌ژنتیکی (مثل متیلاسیون و اصلاح هیستون) دسترسی به ژن‌ها را تنظیم می‌کنند.",
+              "پروتئین‌ها و مسیرهای سیگنالی پایین‌دست، رفتار و ریخت سلول را تغییر می‌دهند.",
+              "سنجش نشانگرهای ژنی و پروتئینی نشان می‌دهد برنامه واقعاً فعال شده است یا فقط ظاهر شبیه شده.",
+            ],
+          },
+          {
+            title: "سلول پیش‌ساز",
+            body: "سلول دیگر کاملاً پرتوان نیست، اما هنوز می‌تواند به چند نوع نزدیک و مرتبط تبدیل شود؛ مسیر باریک‌تر و مشخص‌تر است.",
+            cue: "مسیر محدودتر، اما مشخص‌تر می‌شود.",
+            points: [
+              "پیش‌سازها اغلب توان تکثیر دارند و پلی میان پرتوانی و سلول بالغ‌اند.",
+              "تعهد نسبی به یک رده (مثل عصبی یا خونی) ایجاد شده، ولی بلوغ کامل رخ نداده است.",
+              "این مرحله برای مقیاس‌پذیری تولید سلولی مهم است؛ چون می‌توان جمعیت را گسترش داد.",
+              "کنترل خلوص در اینجا حیاتی است تا سلول‌های پرتوان باقی‌مانده وارد محصول نهایی نشوند.",
+            ],
+          },
+          {
+            title: "سلول تخصصی",
+            body: "در پایان مسیر، ساختار، نشانگرها و عملکرد باید با نقش زیستی هدف هم‌راستا شوند؛ شباهت ظاهری کافی نیست.",
+            cue: "هویت، ساختار و عملکرد هم‌راستا می‌شوند.",
+            points: [
+              "سلول تخصصی معمولاً تکثیر محدودتری دارد و وظیفه‌ای مشخص (سیگنال، انقباض، سوخت‌وساز و…) انجام می‌دهد.",
+              "آزمون عملکردی—نه فقط رنگ‌آمیزی نشانگر—معیار اصلی بلوغ است.",
+              "ادغام با بافت، خون‌رسانی و ایمنی بدن، چالش ترجمه‌ی آزمایشگاه به درمان است.",
+              "برای کاربرد بالینی باید ایمنی، پایداری ژنتیکی و نبود جمعیت ناخواسته مستند شود.",
+            ],
+          },
         ]
       : [
-          { title: "Open potential", body: "The cell still has several possible specialized routes and can keep renewing itself.", cue: "Several possibilities remain open." },
-          { title: "Environmental signals", body: "Molecules, neighboring cells, and the tissue matrix help steer the route.", cue: "Context gives the choice a direction." },
-          { title: "Gene program", body: "Some genes switch on while others switch off, shaping future identity.", cue: "A new identity is built from within." },
-          { title: "Progenitor cell", body: "An intermediate stage: less flexible, but clearer in direction.", cue: "The route narrows and becomes clearer." },
-          { title: "Specialized cell", body: "Structure and function align with the final role.", cue: "Identity, structure, and function align." },
+          {
+            title: "Open potential",
+            body: "At this station the cell has no final identity yet: it can renew itself while keeping several differentiation routes open.",
+            cue: "Several possibilities remain open.",
+            points: [
+              "Pluripotency means the cell can enter multiple lineages, not one fixed path.",
+              "Self-renewal preserves the cell source so research or therapeutic material is not exhausted.",
+              "Pluripotency markers and colony morphology help confirm this stage.",
+              "Later guidance must be controlled; otherwise unwanted routes can activate.",
+            ],
+          },
+          {
+            title: "Environmental signals",
+            body: "The outside context—molecules, cell contact, and matrix—biases which route the cell takes more seriously.",
+            cue: "Context gives the choice a direction.",
+            points: [
+              "Paracrine and endocrine cues (such as growth factors) steer differentiation.",
+              "Cell–cell contact and junction signaling transmit local niche information.",
+              "Extracellular-matrix stiffness and composition influence mechanical behavior and fate.",
+              "In culture, changing dose or timing of signals can alter the differentiation outcome.",
+            ],
+          },
+          {
+            title: "Gene program",
+            body: "New identity is built largely by rewiring gene expression: some networks switch on while others switch off.",
+            cue: "A new identity is built from within.",
+            points: [
+              "Key transcription factors stabilize lineage-specific gene circuits.",
+              "Epigenetic changes (such as methylation and histone marks) regulate gene accessibility.",
+              "Downstream proteins and signaling pathways reshape cell form and behavior.",
+              "Gene and protein markers show whether a program is truly active, not merely similar in appearance.",
+            ],
+          },
+          {
+            title: "Progenitor cell",
+            body: "The cell is no longer fully pluripotent, but can still form a related set of cell types; the route is narrower and clearer.",
+            cue: "The route narrows and becomes clearer.",
+            points: [
+              "Progenitors often retain proliferative capacity and bridge pluripotency and maturity.",
+              "Relative lineage commitment (for example neural or blood) exists, but full maturation has not occurred.",
+              "This stage matters for scalable manufacturing because the population can still expand.",
+              "Purity control is critical so residual pluripotent cells do not enter the final product.",
+            ],
+          },
+          {
+            title: "Specialized cell",
+            body: "At the end of the path, structure, markers, and function should align with the target biological role; looks alone are not enough.",
+            cue: "Identity, structure, and function align.",
+            points: [
+              "Specialized cells usually proliferate less and perform a defined role (signaling, contraction, metabolism, and so on).",
+              "Functional assays—not marker staining alone—are the main maturity criterion.",
+              "Tissue integration, blood supply, and immunity are central translation challenges.",
+              "Clinical use requires documented safety, genetic stability, and absence of unwanted populations.",
+            ],
+          },
         ];
 
   return (
@@ -513,15 +940,41 @@ export default function Home() {
           <div className="hero-copy">
             <p className="brand-signal">
               <img src={ASSETS.mark} alt="" width={28} height={28} />
-              {lang === "fa" ? "روایت سلول" : "Cell Story"}
+              <TypeFadeText
+                key={`brand-${lang}`}
+                text={brandLabel}
+                speed={42}
+                delay={180}
+                onDone={() => setHeroPhase(1)}
+              />
             </p>
             <h1>
-              {t.title.split("\n").map((line) => (
-                <span key={line}>{line}</span>
+              {titleLines.map((line, i) => (
+                <TypeFadeText
+                  key={`title-${lang}-${i}`}
+                  as="span"
+                  className={i === titleLines.length - 1 ? "hero-line accent" : "hero-line"}
+                  text={line}
+                  active={heroPhase >= i + 1}
+                  speed={36}
+                  delay={120}
+                  showCaret={heroPhase === i + 1}
+                  onDone={() => setHeroPhase((phase) => Math.max(phase, i + 2))}
+                />
               ))}
             </h1>
-            <p className="hero-subtitle">{t.subtitle}</p>
-            <div className="hero-actions">
+            <TypeFadeText
+              key={`sub-${lang}`}
+              as="p"
+              className="hero-subtitle"
+              text={t.subtitle}
+              active={heroPhase >= titleLines.length + 1}
+              speed={28}
+              delay={160}
+              showCaret={heroPhase === titleLines.length + 1}
+              onDone={() => setHeroPhase((phase) => Math.max(phase, titleLines.length + 2))}
+            />
+            <div className={`hero-actions ${heroPhase >= titleLines.length + 2 || reduced ? "is-visible" : ""}`}>
               <button className="btn-primary" onClick={() => scrollTo("one")}>
                 {t.begin}
                 <ArrowDown size={16} />
@@ -685,7 +1138,7 @@ export default function Home() {
               {timelineLabels.map((label, i) => (
                 <button
                   key={label}
-                  className={`timeline-step ${i === timelineIndex ? "selected" : ""}`}
+                  className={`timeline-step stage-${i + 1} ${i === timelineIndex ? "selected" : ""}`}
                   onClick={() => setTimelineIndex(i)}
                   aria-pressed={i === timelineIndex}
                 >
@@ -698,15 +1151,23 @@ export default function Home() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={timelineIndex + lang}
-                className="timeline-detail"
+                className={`timeline-detail stage-${timelineIndex + 1}`}
                 initial={reduced ? {} : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.28 }}
               >
                 <div className="timeline-detail-index">0{timelineIndex + 1}</div>
-                <div>
+                <div className="timeline-detail-copy">
                   <h3>{timelineDetails[timelineIndex].title}</h3>
                   <p>{timelineDetails[timelineIndex].body}</p>
+                  <ol className="timeline-points">
+                    {timelineDetails[timelineIndex].points.map((point, i) => (
+                      <li key={point}>
+                        <span>{String(i + 1).padStart(2, "0")}</span>
+                        <p>{point}</p>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
                 <button onClick={() => setTimelineIndex((timelineIndex + 1) % timelineLabels.length)}>
                   {lang === "fa" ? "ایستگاه بعدی" : "Next station"}
@@ -727,66 +1188,188 @@ export default function Home() {
             <div className="challenge-layout">
               <div className="challenge-list">
                 {challenges[lang].map((c, i) => (
-                  <button
-                    key={c[0]}
-                    className={`challenge-row ${openChallenge === i ? "open" : ""}`}
-                    onClick={() => setOpenChallenge(openChallenge === i ? null : i)}
-                  >
-                    <span className="challenge-number">0{i + 1}</span>
-                    <span className="challenge-copy">
-                      <b>{c[0]}</b>
-                      <span>{c[1]}</span>
+                  <div key={c.title} className={`challenge-item ${openChallenge === i ? "open" : ""}`}>
+                    <button
+                      type="button"
+                      className="challenge-row"
+                      onClick={() => setOpenChallenge(openChallenge === i ? null : i)}
+                      aria-expanded={openChallenge === i}
+                    >
+                      <span className="challenge-number">0{i + 1}</span>
+                      <span className="challenge-copy">
+                        <b>{c.title}</b>
+                        <span>{c.summary}</span>
+                      </span>
+                      <ChevronDown size={18} />
+                    </button>
+                    <AnimatePresence initial={false}>
                       {openChallenge === i && (
-                        <>
-                          <em>{c[2]}</em>
-                          <small>{c[3]}</small>
-                        </>
+                        <motion.div
+                          className="challenge-panel"
+                          initial={reduced ? undefined : { opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={reduced ? undefined : { opacity: 0, height: 0 }}
+                          transition={{ duration: 0.28 }}
+                        >
+                          <div className="challenge-panel-inner">
+                            <div className="challenge-block why">
+                              <h4>{c.why}</h4>
+                              <p>{c.whyBody}</p>
+                            </div>
+                            <div className="challenge-block mechanism">
+                              <h4>{c.mechanism}</h4>
+                              <p>{c.mechanismBody}</p>
+                            </div>
+                            <div className="challenge-block checks">
+                              <h4>{c.checksTitle}</h4>
+                              <ol>
+                                {c.checks.map((item, idx) => (
+                                  <li key={item}>
+                                    <span>{String(idx + 1).padStart(2, "0")}</span>
+                                    <p>{item}</p>
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                            <div className="challenge-takeaway">
+                              <span>{lang === "fa" ? "جمع‌بندی" : "Takeaway"}</span>
+                              <p>{c.takeaway}</p>
+                            </div>
+                          </div>
+                        </motion.div>
                       )}
-                    </span>
-                    <ChevronDown size={18} />
-                  </button>
+                    </AnimatePresence>
+                  </div>
                 ))}
               </div>
               <div className="challenge-visual">
-                <img
-                  src={ASSETS.tissue}
-                  alt={lang === "fa" ? "محیط بافتی در پزشکی بازساختی" : "Tissue environment in regenerative medicine"}
-                  loading="lazy"
-                  decoding="async"
-                  width={1400}
-                  height={1050}
+                <FadeCarousel
+                  intervalMs={2000}
+                  fadeMs={200}
+                  slides={
+                    lang === "fa"
+                      ? [
+                          {
+                            src: ASSETS.challengeIntegration,
+                            alt: "ادغام سلولی در محیط بافتی",
+                            caption: "بقا و ادغام در بافت",
+                          },
+                          {
+                            src: ASSETS.challengeImmunity,
+                            alt: "پایش ایمنی پیرامون سلول‌های پیوندی",
+                            caption: "ایمنی و رد پیوند",
+                          },
+                          {
+                            src: ASSETS.challengePurity,
+                            alt: "کنترل کیفیت و خلوص جمعیت سلولی",
+                            caption: "کنترل تمایز و خلوص",
+                          },
+                          {
+                            src: ASSETS.challengeTumor,
+                            alt: "ریسک رشد غیرطبیعی سلولی",
+                            caption: "خطر تومورزایی",
+                          },
+                          {
+                            src: ASSETS.challengeScale,
+                            alt: "تولید کنترل‌شده در مقیاس درمانی",
+                            caption: "مقیاس‌پذیری و کیفیت",
+                          },
+                          {
+                            src: ASSETS.tissue,
+                            alt: "محیط بافتی در پزشکی بازساختی",
+                            caption: "زمینه بافتی درمان",
+                          },
+                        ]
+                      : [
+                          {
+                            src: ASSETS.challengeIntegration,
+                            alt: "Cell integration in a tissue environment",
+                            caption: "Survival and tissue integration",
+                          },
+                          {
+                            src: ASSETS.challengeImmunity,
+                            alt: "Immune surveillance around transplanted cells",
+                            caption: "Immunity and rejection",
+                          },
+                          {
+                            src: ASSETS.challengePurity,
+                            alt: "Quality control and cell-population purity",
+                            caption: "Differentiation control and purity",
+                          },
+                          {
+                            src: ASSETS.challengeTumor,
+                            alt: "Risk of abnormal cell overgrowth",
+                            caption: "Tumor risk",
+                          },
+                          {
+                            src: ASSETS.challengeScale,
+                            alt: "Controlled biomanufacturing at clinical scale",
+                            caption: "Scale and quality",
+                          },
+                          {
+                            src: ASSETS.tissue,
+                            alt: "Tissue environment in regenerative medicine",
+                            caption: "Tissue context for therapy",
+                          },
+                        ]
+                  }
                 />
               </div>
             </div>
             <div className="evidence-strip">
-              <h3>{t.gapTitle}</h3>
+              <div className="evidence-head">
+                <div>
+                  <h3>{t.gapTitle}</h3>
+                  <p>{t.gapIntro}</p>
+                </div>
+                <div className="evidence-flow-legend" aria-hidden="true">
+                  <span>01</span>
+                  <i />
+                  <span>02</span>
+                  <i />
+                  <span>03</span>
+                </div>
+              </div>
+
               <div className="evidence-track">
-                {(lang === "fa"
-                  ? [
-                      [t.lab, "ایده و امکان"],
-                      [t.preclinical, "آزمون و ایمنی"],
-                      [t.validated, "شواهد انسانی"],
-                    ]
-                  : [
-                      [t.lab, "Idea and possibility"],
-                      [t.preclinical, "Testing and safety"],
-                      [t.validated, "Human evidence"],
-                    ]
-                ).map(([label, note], i) => (
-                  <div key={label} className="evidence-stage">
-                    <span>0{i + 1}</span>
-                    <b>{label}</b>
-                    <small>{note}</small>
-                  </div>
+                {evidenceStages[lang].map((stage, i) => (
+                  <article key={stage.title} className={`evidence-stage stage-${i + 1}`}>
+                    <div className="evidence-media">
+                      <img src={stage.img} alt={stage.alt} loading="lazy" decoding="async" width={1600} height={900} />
+                      <span className="evidence-step">0{i + 1}</span>
+                    </div>
+                    <div className="evidence-copy">
+                      <small>{stage.focus}</small>
+                      <b>{stage.title}</b>
+                      <p>{stage.body}</p>
+                      <ul>
+                        {stage.checks.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
                 ))}
               </div>
+
+              <aside className="evidence-note">
+                <span>{t.gapNoteTitle}</span>
+                <p>{t.gapNote}</p>
+              </aside>
             </div>
           </div>
         </section>
 
         <section id="three" className="ips-section">
-          <div className="section-grid">
-            <motion.div className="ips-visual" {...fade}>
+          <div className="wide-inner ips-flow">
+            <motion.div className="ips-intro" {...fade}>
+              <SectionTag n="04" label={t.question} />
+              <h2>{t.ipsTitle}</h2>
+              <p className="lead">{t.ipsIntro}</p>
+              <p>{t.ipsBody}</p>
+            </motion.div>
+
+            <motion.div className="ips-hero-panel" {...fade}>
               <img
                 src={ASSETS.ips}
                 alt={lang === "fa" ? "بازبرنامه‌ریزی سلول بالغ به سلول iPS" : "Reprogramming a mature cell into an iPS cell"}
@@ -795,13 +1378,7 @@ export default function Home() {
                 width={1400}
                 height={1050}
               />
-            </motion.div>
-            <motion.div className="ips-copy" {...fade}>
-              <SectionTag n="04" label={t.question} />
-              <h2>{t.ipsTitle}</h2>
-              <p className="lead">{t.ipsIntro}</p>
-              <p>{t.ipsBody}</p>
-              <div className="ips-path">
+              <div className="ips-path-row">
                 {(lang === "fa"
                   ? ["سلول پوستی بالغ", "بازبرنامه‌ریزی", "سلول iPS", "تمایز هدایت‌شده"]
                   : ["Mature skin cell", "Reprogramming", "iPS cell", "Directed differentiation"]
@@ -813,10 +1390,145 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <div className="why-box">
-                <h3>{t.why}</h3>
-                <p>{t.whyBody}</p>
+            </motion.div>
+
+            <motion.div className="ips-block" {...fade}>
+              <h3>{t.ipsHowTitle}</h3>
+              <p>{t.ipsHowIntro}</p>
+              <div className="ips-steps">
+                {(lang === "fa"
+                  ? [
+                      {
+                        img: ASSETS.ipsFactors,
+                        title: "ورود فاکتورهای بازبرنامه‌ریزی",
+                        body: "مجموعه‌ای از فاکتورهای رونویسی (مانند عوامل یاماناکا) بیان ژن‌های پرتوانی را فعال و برنامه‌های هویت بالغ را عقب می‌رانند.",
+                        points: [
+                          "هدف، بازنشانی مدارهای ژنی است نه تخریب سلول.",
+                          "کارایی و ایمنی روش انتقال فاکتورها باید کنترل شود.",
+                        ],
+                      },
+                      {
+                        img: ASSETS.ips,
+                        title: "ظهور کلونی‌های پرتوان القایی",
+                        body: "پس از بازتنظیم هویت، سلول‌ها می‌توانند خودنوزایی کنند و نشانگرهای پرتوانی را نشان دهند؛ این مرحله نیازمند تأیید آزمایشگاهی دقیق است.",
+                        points: [
+                          "ریخت‌شناسی کلونی و نشانگرها اولین شواهدند.",
+                          "پایداری ژنتیکی و اپی‌ژنتیکی باید پایش شود.",
+                        ],
+                      },
+                      {
+                        img: ASSETS.ipsDirected,
+                        title: "تمایز هدایت‌شده به سلول هدف",
+                        body: "با پیام‌های مرحله‌ای، iPS را می‌توان به سمت نورون، سلول قلبی، سلول کبدی یا رده‌های دیگر هدایت کرد تا مدل یا ماده‌ی پژوهشی ساخته شود.",
+                        points: [
+                          "هر مسیر، زمان‌بندی و سیگنال مخصوص خود را دارد.",
+                          "بلوغ واقعی با آزمون عملکرد سنجیده می‌شود، نه فقط ظاهر.",
+                        ],
+                      },
+                    ]
+                  : [
+                      {
+                        img: ASSETS.ipsFactors,
+                        title: "Reprogramming factors enter",
+                        body: "A set of transcription factors (such as Yamanaka factors) activates pluripotency networks and pushes adult identity programs back.",
+                        points: [
+                          "The aim is to reset gene circuits, not destroy the cell.",
+                          "Delivery method efficiency and safety must be controlled.",
+                        ],
+                      },
+                      {
+                        img: ASSETS.ips,
+                        title: "Induced pluripotent colonies emerge",
+                        body: "After identity reset, cells can self-renew and display pluripotency markers; this stage needs careful laboratory confirmation.",
+                        points: [
+                          "Colony morphology and markers are early evidence.",
+                          "Genetic and epigenetic stability should be monitored.",
+                        ],
+                      },
+                      {
+                        img: ASSETS.ipsDirected,
+                        title: "Directed differentiation to a target",
+                        body: "With staged cues, iPS cells can be guided toward neurons, heart cells, liver-like cells, or other lineages for models or research material.",
+                        points: [
+                          "Each route needs its own timing and signals.",
+                          "True maturity is judged by function, not appearance alone.",
+                        ],
+                      },
+                    ]
+                ).map((step, i) => (
+                  <article key={step.title} className="ips-step">
+                    <div className="ips-step-media">
+                      <img src={step.img} alt="" loading="lazy" decoding="async" width={1400} height={1050} />
+                      <span>0{i + 1}</span>
+                    </div>
+                    <div className="ips-step-copy">
+                      <h4>{step.title}</h4>
+                      <p>{step.body}</p>
+                      <ul>
+                        {step.points.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
+                ))}
               </div>
+            </motion.div>
+
+            <motion.div className="ips-block" {...fade}>
+              <h3>{t.ipsUsesTitle}</h3>
+              <p>{t.ipsUsesIntro}</p>
+              <div className="ips-uses">
+                {(lang === "fa"
+                  ? [
+                      {
+                        img: ASSETS.ipsModeling,
+                        title: "مدل‌سازی بیماری",
+                        body: "از سلول بیمار می‌توان iPS ساخت و بیماری را در ظرف آزمایشگاهی بازسازی کرد تا سازوکارها روشن‌تر شوند.",
+                      },
+                      {
+                        img: ASSETS.ipsDirected,
+                        title: "آزمون دارو و سمیت",
+                        body: "سلول‌های مشتق از iPS کمک می‌کنند اثر و ایمنی داروها روی بافت‌های شبیه انسان دقیق‌تر بررسی شود.",
+                      },
+                      {
+                        img: ASSETS.ipsFactors,
+                        title: "پژوهش سلول جایگزین",
+                        body: "iPS مسیری برای مطالعه‌ی تولید کنترل‌شده‌ی سلول‌های تخصصی می‌گشاید؛ کاربرد بالینی هنوز نیازمند شواهد و ایمنی است.",
+                      },
+                    ]
+                  : [
+                      {
+                        img: ASSETS.ipsModeling,
+                        title: "Disease modelling",
+                        body: "Patient cells can be turned into iPS lines so disease mechanisms can be studied in a controlled lab setting.",
+                      },
+                      {
+                        img: ASSETS.ipsDirected,
+                        title: "Drug and toxicity testing",
+                        body: "iPS-derived cells help researchers examine drug effects and safety on more human-relevant cell types.",
+                      },
+                      {
+                        img: ASSETS.ipsFactors,
+                        title: "Replacement-cell research",
+                        body: "iPS cells open a route to study controlled production of specialized cells; clinical use still needs evidence and safety.",
+                      },
+                    ]
+                ).map((use) => (
+                  <article key={use.title} className="ips-use">
+                    <img src={use.img} alt="" loading="lazy" decoding="async" width={1400} height={1050} />
+                    <div>
+                      <h4>{use.title}</h4>
+                      <p>{use.body}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div className="why-box" {...fade}>
+              <h3>{t.why}</h3>
+              <p>{t.whyBody}</p>
             </motion.div>
           </div>
         </section>
@@ -828,52 +1540,7 @@ export default function Home() {
               <h2>{t.quizTitle}</h2>
               <p>{t.quizIntro}</p>
             </div>
-            <div className="quiz-card">
-              <div className="quiz-meta">
-                <span>
-                  {String(quizIndex + 1).padStart(2, "0")} / 03
-                </span>
-                <div className="quiz-progress">
-                  <i style={{ width: `${((quizIndex + 1) / 3) * 100}%` }} />
-                </div>
-              </div>
-              <h3>{quiz[lang][quizIndex].q}</h3>
-              <div className="quiz-options">
-                {quiz[lang][quizIndex].options.map((option, i) => (
-                  <button
-                    key={option}
-                    className={
-                      selectedAnswer === i ? (i === quiz[lang][quizIndex].answer ? "right" : "wrong") : ""
-                    }
-                    onClick={() => setSelectedAnswer(i)}
-                  >
-                    <span>{String.fromCharCode(65 + i)}</span>
-                    {option}
-                    {selectedAnswer === i &&
-                      (i === quiz[lang][quizIndex].answer ? <Check size={17} /> : <X size={17} />)}
-                  </button>
-                ))}
-              </div>
-              {selectedAnswer !== null && (
-                <p className={`feedback ${selectedAnswer === quiz[lang][quizIndex].answer ? "good" : ""}`}>
-                  {selectedAnswer === quiz[lang][quizIndex].answer ? t.correct : t.almost}{" "}
-                  {quiz[lang][quizIndex].explain}
-                </p>
-              )}
-              <button
-                className="btn-primary"
-                disabled={selectedAnswer === null}
-                onClick={() => {
-                  if (quizIndex < 2) {
-                    setQuizIndex(quizIndex + 1);
-                    setSelectedAnswer(null);
-                  } else scrollTo("footer");
-                }}
-              >
-                {quizIndex === 2 ? t.finish : t.next}
-                <ArrowUpRight size={16} />
-              </button>
-            </div>
+            <QuizExam lang={lang} />
           </div>
         </section>
 
@@ -881,7 +1548,13 @@ export default function Home() {
           <div className="footer-top">
             <div>
               <img src={ASSETS.mark} alt="" className="footer-mark" width={42} height={42} />
-              <h2>{t.closing}</h2>
+              <h2 className="footer-closing" aria-label={t.closing}>
+                {t.closing.split(/\s+/).filter(Boolean).map((word, i) => (
+                  <span key={`${word}-${i}`} className={`closing-word fx-${i % 6}`}>
+                    {word}
+                  </span>
+                ))}
+              </h2>
             </div>
             <div className="source-list">
               <h3>{t.sources}</h3>
@@ -900,11 +1573,21 @@ export default function Home() {
             </div>
           </div>
           <div className="footer-bottom">
-            <span>© 2026 CELL STORY</span>
-            <span>{t.footer}</span>
-            <button onClick={() => scrollTo("top")} aria-label="Back to top">
-              <ArrowUp size={16} />
-            </button>
+            <span className="footer-credit">
+              {t.createdByPrefix}{" "}
+              <b className="credit-name credit-arshia">{t.nameArshia}</b>{" "}
+              {t.createdByAnd}{" "}
+              <b className="credit-name credit-parsa">{t.nameParsa}</b>
+            </span>
+            <span className="footer-tagline">{t.footer}</span>
+            <div className="footer-end">
+              <span className="footer-copy" dir="ltr">
+                © 2026 CELL STORY
+              </span>
+              <button onClick={() => scrollTo("top")} aria-label="Back to top">
+                <ArrowUp size={16} />
+              </button>
+            </div>
           </div>
         </footer>
       </main>

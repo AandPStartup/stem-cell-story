@@ -16,7 +16,7 @@ import {
 
 type Lang = "fa" | "en";
 type Difficulty = "easy" | "medium" | "hard";
-type Phase = "setup" | "playing" | "results";
+type Phase = "idle" | "playing" | "results";
 type TopicKey = "identity" | "differentiation" | "clinical" | "ips";
 type FeedbackMode = "full" | "mark";
 type AutoAdvance = "off" | "fast" | "normal" | "slow";
@@ -390,36 +390,24 @@ function buildSession(lang: Lang, config: SessionConfig): PlayQuestion[] {
   });
 }
 
+const FIXED_SESSION: SessionConfig = {
+  difficulty: "mixed",
+  topics: ALL_TOPICS,
+  optionCount: 4,
+  questionCount: 8,
+  feedbackMode: "full",
+  autoAdvance: "off",
+  timerMode: "off",
+  shuffleOptions: true,
+};
+
 const ui = {
   fa: {
-    setupTitle: "تنظیم آزمون",
-    setupBody: "موضوع، سطح، بازخورد و زمان‌بندی را دقیق تنظیم کنید؛ پرسش‌ها هر بار تصادفی‌اند.",
-    difficulty: "سطح دشواری",
-    easy: "آسان",
-    medium: "متوسط",
-    hard: "سخت",
-    mixed: "ترکیبی",
-    topics: "موضوع‌ها",
-    topicAll: "همه",
-    options: "تعداد گزینه",
-    questions: "تعداد پرسش",
-    allQuestions: "همه",
-    feedback: "نوع بازخورد",
-    feedbackFull: "علامت + توضیح",
-    feedbackMark: "فقط علامت درست/غلط",
-    autoAdvance: "رفتن خودکار",
-    autoOff: "خاموش",
-    autoFast: "سریع",
-    autoNormal: "عادی",
-    autoSlow: "آرام",
-    timer: "تایمر هر پرسش",
-    timerOff: "بدون تایمر",
-    shuffle: "ترتیب گزینه‌ها",
-    shuffleOn: "تصادفی",
-    shuffleOff: "پاسخ درست اول",
-    poolLabel: "پرسش‌های موجود با این فیلتر",
-    summary: "خلاصه تنظیمات",
+    idlePrompt: "می خواهی خودتو امتحان کنی؟",
+    idleBody: "بزن بریم",
     start: "شروع آزمون",
+    back: "قبلی",
+    end: "پایان",
     next: "پرسش بعدی",
     finish: "مشاهده نتیجه",
     correct: "درست",
@@ -432,40 +420,16 @@ const ui = {
     byTopic: "درستی بر اساس موضوع",
     outcome: "نتیجه‌ی پاسخ‌ها",
     restart: "آزمون دوباره",
-    answered: "پاسخ داده‌شده",
     accuracy: "دقت",
     timeUp: "زمان تمام شد",
     seconds: "ثانیه",
   },
   en: {
-    setupTitle: "Quiz setup",
-    setupBody: "Tune topics, difficulty, feedback, and pacing. Questions are randomized each run.",
-    difficulty: "Difficulty",
-    easy: "Easy",
-    medium: "Medium",
-    hard: "Hard",
-    mixed: "Mixed",
-    topics: "Topics",
-    topicAll: "All",
-    options: "Choices per question",
-    questions: "Number of questions",
-    allQuestions: "All",
-    feedback: "Feedback style",
-    feedbackFull: "Mark + explanation",
-    feedbackMark: "Mark only",
-    autoAdvance: "Auto-advance",
-    autoOff: "Off",
-    autoFast: "Fast",
-    autoNormal: "Normal",
-    autoSlow: "Slow",
-    timer: "Per-question timer",
-    timerOff: "No timer",
-    shuffle: "Option order",
-    shuffleOn: "Shuffled",
-    shuffleOff: "Correct first",
-    poolLabel: "Questions available with these filters",
-    summary: "Setup summary",
+    idlePrompt: "Want to test yourself?",
+    idleBody: "Let's go",
     start: "Start quiz",
+    back: "Back",
+    end: "End",
     next: "Next question",
     finish: "See results",
     correct: "Correct",
@@ -478,7 +442,6 @@ const ui = {
     byTopic: "Accuracy by topic",
     outcome: "Answer outcomes",
     restart: "Retake quiz",
-    answered: "Answered",
     accuracy: "Accuracy",
     timeUp: "Time's up",
     seconds: "sec",
@@ -652,15 +615,10 @@ function TopicValueLabel({
 
 export default function QuizExam({ lang }: { lang: Lang }) {
   const t = ui[lang];
-  const [phase, setPhase] = useState<Phase>("setup");
-  const [difficulty, setDifficulty] = useState<Difficulty | "mixed">("mixed");
-  const [topics, setTopics] = useState<TopicKey[]>([...ALL_TOPICS]);
-  const [optionCount, setOptionCount] = useState(3);
-  const [questionCount, setQuestionCount] = useState<number | "all">(5);
-  const [feedbackMode, setFeedbackMode] = useState<FeedbackMode>("full");
-  const [autoAdvance, setAutoAdvance] = useState<AutoAdvance>("normal");
-  const [timerMode, setTimerMode] = useState<TimerMode>("off");
-  const [shuffleOptions, setShuffleOptions] = useState(true);
+  const [phase, setPhase] = useState<Phase>("idle");
+  const feedbackMode: FeedbackMode = FIXED_SESSION.feedbackMode;
+  const autoAdvance: AutoAdvance = FIXED_SESSION.autoAdvance;
+  const timerMode: TimerMode = FIXED_SESSION.timerMode;
   const [session, setSession] = useState<PlayQuestion[]>([]);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -669,9 +627,6 @@ export default function QuizExam({ lang }: { lang: Lang }) {
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const [results, setResults] = useState<{ id: string; topic: string; difficulty: Difficulty; correct: boolean }[]>([]);
   const [pieHover, setPieHover] = useState<{ name: string; value: number; color: string } | null>(null);
-
-  const poolSize = useMemo(() => filterPool(difficulty, topics).length, [difficulty, topics]);
-  const plannedCount = questionCount === "all" ? poolSize : Math.min(questionCount, poolSize);
 
   const current = session[index];
   const progress = session.length ? ((index + (locked ? 1 : 0)) / session.length) * 100 : 0;
@@ -705,37 +660,17 @@ export default function QuizExam({ lang }: { lang: Lang }) {
     [results, t.correct, t.wrong],
   );
 
-  const toggleTopic = (key: TopicKey) => {
-    setTopics((prev) => {
-      if (prev.includes(key)) {
-        if (prev.length === 1) return prev;
-        return prev.filter((tKey) => tKey !== key);
-      }
-      return [...prev, key];
-    });
-  };
-
-  const selectAllTopics = () => setTopics([...ALL_TOPICS]);
-
   const startQuiz = () => {
-    if (poolSize === 0) return;
-    const built = buildSession(lang, {
-      difficulty,
-      topics,
-      optionCount,
-      questionCount,
-      feedbackMode,
-      autoAdvance,
-      timerMode,
-      shuffleOptions,
-    });
+    const built = buildSession(lang, FIXED_SESSION);
+    if (built.length === 0) return;
     setSession(built);
     setIndex(0);
     setSelected(null);
     setLocked(false);
     setTimedOut(false);
-    setSecondsLeft(timerMode === "off" ? null : Number(timerMode));
+    setSecondsLeft(null);
     setResults([]);
+    setPieHover(null);
     setPhase("playing");
   };
 
@@ -746,15 +681,18 @@ export default function QuizExam({ lang }: { lang: Lang }) {
     setSelected(pick);
     setLocked(true);
     setTimedOut(pick === null);
-    setResults((prev) => [
-      ...prev,
-      {
-        id: current.id,
-        topic: current.topic,
-        difficulty: current.difficulty,
-        correct: isCorrect,
-      },
-    ]);
+    setResults((prev) => {
+      const next = prev.filter((r) => r.id !== current.id);
+      return [
+        ...next,
+        {
+          id: current.id,
+          topic: current.topic,
+          difficulty: current.difficulty,
+          correct: isCorrect,
+        },
+      ];
+    });
   };
 
   const goNext = () => {
@@ -766,7 +704,30 @@ export default function QuizExam({ lang }: { lang: Lang }) {
     setSelected(null);
     setLocked(false);
     setTimedOut(false);
-    setSecondsLeft(timerMode === "off" ? null : Number(timerMode));
+    setSecondsLeft(null);
+  };
+
+  const goBack = () => {
+    if (index <= 0) return;
+    const prevQ = session[index - 1];
+    setIndex((v) => v - 1);
+    setResults((prev) => prev.filter((r) => r.id !== prevQ.id && r.id !== current?.id));
+    setSelected(null);
+    setLocked(false);
+    setTimedOut(false);
+    setSecondsLeft(null);
+  };
+
+  const endQuiz = () => {
+    setPhase("idle");
+    setSession([]);
+    setIndex(0);
+    setSelected(null);
+    setLocked(false);
+    setTimedOut(false);
+    setSecondsLeft(null);
+    setResults([]);
+    setPieHover(null);
   };
 
   useEffect(() => {
@@ -792,196 +753,19 @@ export default function QuizExam({ lang }: { lang: Lang }) {
   }, [phase, locked, timerMode, secondsLeft, index]);
 
   const restart = () => {
-    setPhase("setup");
-    setSession([]);
-    setIndex(0);
-    setSelected(null);
-    setLocked(false);
-    setTimedOut(false);
-    setSecondsLeft(null);
-    setResults([]);
-    setPieHover(null);
+    endQuiz();
   };
-
-  const difficultyLabel =
-    difficulty === "mixed" ? t.mixed : difficulty === "easy" ? t.easy : difficulty === "medium" ? t.medium : t.hard;
-  const autoLabel =
-    autoAdvance === "off"
-      ? t.autoOff
-      : autoAdvance === "fast"
-        ? t.autoFast
-        : autoAdvance === "normal"
-          ? t.autoNormal
-          : t.autoSlow;
 
   return (
     <div className="quiz-card exam">
-      {phase === "setup" && (
-        <div className="quiz-setup">
-          <div className="quiz-setup-head">
-            <div>
-              <h3>{t.setupTitle}</h3>
-              <p>{t.setupBody}</p>
-            </div>
-            <aside className="quiz-setup-pool" aria-live="polite">
-              <span>{t.poolLabel}</span>
-              <strong>{poolSize}</strong>
-            </aside>
-          </div>
-
-          <div className="quiz-setup-grid">
-            <div className="quiz-setup-block span-2">
-              <span>{t.topics}</span>
-              <div className="quiz-chips wrap">
-                <button type="button" className={topics.length === ALL_TOPICS.length ? "active" : ""} onClick={selectAllTopics}>
-                  {t.topicAll}
-                </button>
-                {ALL_TOPICS.map((key) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className={topics.includes(key) ? "active" : ""}
-                    onClick={() => toggleTopic(key)}
-                  >
-                    {TOPIC_META[key][lang]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="quiz-setup-block">
-              <span>{t.difficulty}</span>
-              <div className="quiz-chips">
-                {(["easy", "medium", "hard", "mixed"] as const).map((level) => (
-                  <button
-                    key={level}
-                    type="button"
-                    className={difficulty === level ? "active" : ""}
-                    onClick={() => setDifficulty(level)}
-                  >
-                    {t[level]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="quiz-setup-block">
-              <span>{t.questions}</span>
-              <div className="quiz-chips">
-                {([3, 5, 7, 10, "all"] as const).map((n) => (
-                  <button
-                    key={String(n)}
-                    type="button"
-                    className={questionCount === n ? "active" : ""}
-                    onClick={() => setQuestionCount(n)}
-                  >
-                    {n === "all" ? t.allQuestions : n}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="quiz-setup-block">
-              <span>{t.options}</span>
-              <div className="quiz-chips">
-                {[2, 3, 4].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    className={optionCount === n ? "active" : ""}
-                    onClick={() => setOptionCount(n)}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="quiz-setup-block">
-              <span>{t.shuffle}</span>
-              <div className="quiz-chips">
-                <button type="button" className={shuffleOptions ? "active" : ""} onClick={() => setShuffleOptions(true)}>
-                  {t.shuffleOn}
-                </button>
-                <button type="button" className={!shuffleOptions ? "active" : ""} onClick={() => setShuffleOptions(false)}>
-                  {t.shuffleOff}
-                </button>
-              </div>
-            </div>
-
-            <div className="quiz-setup-block">
-              <span>{t.feedback}</span>
-              <div className="quiz-chips">
-                <button type="button" className={feedbackMode === "full" ? "active" : ""} onClick={() => setFeedbackMode("full")}>
-                  {t.feedbackFull}
-                </button>
-                <button type="button" className={feedbackMode === "mark" ? "active" : ""} onClick={() => setFeedbackMode("mark")}>
-                  {t.feedbackMark}
-                </button>
-              </div>
-            </div>
-
-            <div className="quiz-setup-block">
-              <span>{t.autoAdvance}</span>
-              <div className="quiz-chips">
-                {(
-                  [
-                    ["off", t.autoOff],
-                    ["fast", t.autoFast],
-                    ["normal", t.autoNormal],
-                    ["slow", t.autoSlow],
-                  ] as const
-                ).map(([key, label]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className={autoAdvance === key ? "active" : ""}
-                    onClick={() => setAutoAdvance(key)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="quiz-setup-block span-2">
-              <span>{t.timer}</span>
-              <div className="quiz-chips">
-                {(
-                  [
-                    ["off", t.timerOff],
-                    ["20", `20 ${t.seconds}`],
-                    ["30", `30 ${t.seconds}`],
-                    ["45", `45 ${t.seconds}`],
-                  ] as const
-                ).map(([key, label]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className={timerMode === key ? "active" : ""}
-                    onClick={() => setTimerMode(key)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="quiz-setup-footer">
-            <div className="quiz-setup-summary">
-              <span>{t.summary}</span>
-              <p>
-                {difficultyLabel} · {plannedCount} {t.of} {poolSize} · {optionCount}{" "}
-                {lang === "fa" ? "گزینه" : "choices"} · {autoLabel}
-                {timerMode !== "off" ? ` · ${timerMode}s` : ""}
-              </p>
-            </div>
-            <button className="btn-primary" type="button" onClick={startQuiz} disabled={poolSize === 0}>
-              {t.start}
-              <ArrowUpRight size={16} />
-            </button>
-          </div>
+      {phase === "idle" && (
+        <div className="quiz-idle">
+          <h3>{t.idlePrompt}</h3>
+          <p>{t.idleBody}</p>
+          <button className="btn-primary" type="button" onClick={startQuiz}>
+            {t.start}
+            <ArrowUpRight size={16} />
+          </button>
         </div>
       )}
 
@@ -1059,10 +843,18 @@ export default function QuizExam({ lang }: { lang: Lang }) {
               )}
             </div>
           )}
-          <button className="btn-primary" type="button" disabled={!locked} onClick={goNext}>
-            {index >= session.length - 1 ? t.finish : t.next}
-            <ArrowUpRight size={16} />
-          </button>
+          <div className="quiz-nav">
+            <button className="btn-quiet" type="button" onClick={goBack} disabled={index === 0}>
+              {t.back}
+            </button>
+            <button className="btn-quiet quiz-end" type="button" onClick={endQuiz}>
+              {t.end}
+            </button>
+            <button className="btn-primary" type="button" disabled={!locked} onClick={goNext}>
+              {index >= session.length - 1 ? t.finish : t.next}
+              <ArrowUpRight size={16} />
+            </button>
+          </div>
         </>
       )}
 
@@ -1102,13 +894,13 @@ export default function QuizExam({ lang }: { lang: Lang }) {
                       innerRadius={48}
                       outerRadius={72}
                       paddingAngle={3}
-                      onMouseEnter={(_, index) => {
-                        const row = outcomeChart[index];
+                      onMouseEnter={(_, pieIndex) => {
+                        const row = outcomeChart[pieIndex];
                         if (!row) return;
                         setPieHover({
                           name: row.name,
                           value: row.value,
-                          color: PIE_COLORS[index % PIE_COLORS.length],
+                          color: PIE_COLORS[pieIndex % PIE_COLORS.length],
                         });
                       }}
                       onMouseLeave={() => setPieHover(null)}

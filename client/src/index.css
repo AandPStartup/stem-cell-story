@@ -78,6 +78,7 @@ a:focus-visible {
 .site-shell {
   min-height: 100vh;
   position: relative;
+  overflow-x: clip;
   background:
     radial-gradient(1200px 600px at 10% -10%, rgba(14, 154, 168, 0.12), transparent 60%),
     radial-gradient(900px 500px at 100% 20%, rgba(159, 196, 90, 0.08), transparent 55%),
@@ -108,6 +109,13 @@ a:focus-visible {
   letter-spacing: -0.04em;
   font-size: 17px;
   font-weight: 500;
+  min-width: 0;
+  max-width: min(52vw, 280px);
+}
+
+.brand span {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .brand img {
@@ -222,11 +230,13 @@ a:focus-visible {
 .hero h1 {
   margin: 0;
   font-family: "Vazirmatn", "IBM Plex Sans", sans-serif;
-  font-size: clamp(2.8rem, 7vw, 5.8rem);
-  line-height: 1.05;
-  letter-spacing: -0.06em;
+  font-size: clamp(2.1rem, 6.4vw, 5.8rem);
+  line-height: 1.12;
+  letter-spacing: -0.05em;
   font-weight: 700;
-  min-height: 2.2em;
+  min-height: 1.2em;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .hero h1 .hero-line {
@@ -1591,6 +1601,7 @@ a:focus-visible {
   max-width: 78ch;
 }
 
+
 @media (max-width: 1100px) {
   .evidence-track {
     grid-template-columns: 1fr;
@@ -1987,6 +1998,63 @@ a:focus-visible {
   color: var(--panel-muted);
   font-weight: 500;
   white-space: nowrap;
+}
+
+.quiz-idle {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 28px 12px 20px;
+}
+
+.quiz-idle h3 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.quiz-idle p {
+  margin: 0;
+  color: var(--panel-muted);
+  max-width: none;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.quiz-idle .btn-primary {
+  margin-top: 8px;
+  justify-self: center;
+}
+
+.quiz-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.quiz-nav .btn-primary {
+  margin-inline-start: auto;
+}
+
+.quiz-nav .btn-quiet:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quiz-end {
+  border-color: rgba(224, 107, 92, 0.45);
+  color: var(--coral);
+}
+
+.quiz-end:hover {
+  border-color: var(--coral);
+  color: var(--coral);
 }
 
 .quiz-setup h3,
@@ -2982,12 +3050,68 @@ a:focus-visible {
     height: 64px;
   }
 
+  .brand {
+    max-width: calc(100vw - 140px);
+    font-size: 14px;
+  }
+
+  .brand img {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
   .control-pill span {
     display: none;
   }
 
+  .hero-copy {
+    width: min(100%, calc(100% - 6vw));
+    padding: 96px 0 48px;
+  }
+
   .hero h1 {
-    font-size: 2.55rem;
+    font-size: clamp(1.85rem, 9vw, 2.35rem);
+    line-height: 1.2;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn-primary,
+  .hero-actions .btn-quiet {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .quiz-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quiz-nav .btn-primary {
+    margin-inline-start: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .quiz-meta {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .quiz-topic {
+    white-space: normal;
+  }
+
+  .quiz-options button {
+    min-height: 48px;
   }
 
   .fate-node {
@@ -3003,6 +3127,26 @@ a:focus-visible {
   .fate-2,
   .fate-4 {
     right: 2%;
+  }
+
+  .ips-uses,
+  .ips-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .wide-inner,
+  .quiz-inner {
+    padding-inline: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .brand {
+    font-size: 13px;
   }
 }
 

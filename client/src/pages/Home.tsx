@@ -29,7 +29,7 @@ type Lang = "fa" | "en";
 const copy = {
   fa: {
     eyebrow: "راهنمای تعاملی سلول‌های بنیادی",
-    title: "علم را بکاوید؛\nروایتگر آن باشید.",
+    title: "سفری به گذشته یک سلول",
     subtitle: "از یک سلول، داستانی برای آینده‌ی پزشکی",
     begin: "شروع روایت",
     journey: "مسیر تمایز",
@@ -69,9 +69,9 @@ const copy = {
     ipsUsesIntro: "کاربردشان بیش از یک تصویر آزمایشگاهی است؛ سه مسیر پژوهشی اصلی دارند.",
     why: "چرا مهم است؟",
     whyBody:
-      "کار بهاروند و همکارانش در مسیر تثبیت و پیشبرد پژوهش سلول‌های iPS انسانی در ایران اهمیت داشت: این کار نشان داد که می‌توان از سلول‌های بالغ انسانی به یک منبع انعطاف‌پذیر برای مطالعه و تمایز سلولی رسید. این دستاورد یک امکان پژوهشی و درمانی ساخت، نه یک درمان تضمین‌شده.",
-    quizTitle: "روایت را خودتان تعریف کنید",
-    quizIntro: "سطح دشواری را انتخاب کنید، آزمون تصادفی بدهید و در پایان تحلیل عملکردتان را ببینید.",
+      "کار بهاروند و همکارانش در مسیر تثبیت و پیشبرد پژوهش سلول‌های iPS انسانی در ایران از این نظر اهمیت داشت که این کار نشان داد می‌توان از سلول‌های بالغ انسانی به یک منبع انعطاف‌پذیر برای مطالعه و تمایز سلولی رسید. این دستاورد یک امکان پژوهشی و درمانی ساخت، نه یک درمان تضمین‌شده.",
+    quizTitle: "می خواهی خودتو امتحان کنی؟",
+    quizIntro: "هشت پرسش تصادفی از موضوعات این روایت؛ در پایان نتیجه و تحلیل کوتاه می‌بینی.",
     sources: "منابع و مسیر مطالعه",
     closing: "علم فقط پاسخ نیست؛ راهی است برای پرسیدن بهتر، آزمودن دقیق‌تر و امید بستن مسئولانه.",
     footer: "یک روایت تعاملی برای فهم بهتر زیست‌شناسی سلول‌های بنیادی",
@@ -86,7 +86,7 @@ const copy = {
   },
   en: {
     eyebrow: "An interactive field guide to stem cells",
-    title: "Explore science.\nTell its story.",
+    title: "A journey into a cell’s past",
     subtitle: "From one cell, a story about the future of medicine",
     begin: "Begin the story",
     journey: "Differentiation path",
@@ -127,8 +127,8 @@ const copy = {
     why: "Why it matters",
     whyBody:
       "Baharvand and colleagues’ work helped establish and advance human iPS-cell research in Iran. It showed the value of turning accessible adult cells into a flexible resource for studying and directing cell fate. That created a research and therapeutic possibility—not a guaranteed treatment.",
-    quizTitle: "Tell the story yourself",
-    quizIntro: "Choose a difficulty, take a randomized quiz, and review your performance insights at the end.",
+    quizTitle: "Want to test yourself?",
+    quizIntro: "Eight randomized questions from this story; see your score and a short insight at the end.",
     sources: "Sources for further reading",
     closing: "Science is not only about answers; it is a way to ask better questions, test more carefully, and hope responsibly.",
     footer: "An interactive story for understanding stem-cell biology",
@@ -666,21 +666,21 @@ function AppHeader({
       <a
         href="#top"
         className={`brand ${lang === "fa" ? "brand-fa" : "brand-en"}`}
-        aria-label={lang === "fa" ? "خانه روایت سلول" : "Cell Story home"}
+        aria-label={lang === "fa" ? "خانه سفری به گذشته یک سلول" : "A journey into a cell’s past — home"}
       >
         <img src={ASSETS.mark} alt="" width={40} height={40} />
         <span>
           {lang === "fa" ? (
             <>
-              <b>روایت</b>
+              <b>سفری به گذشته</b>
               <br />
-              سلول
+              یک سلول
             </>
           ) : (
             <>
-              cell
+              a cell’s
               <br />
-              <b>story</b>
+              <b>past</b>
             </>
           )}
         </span>
@@ -778,11 +778,10 @@ export default function Home() {
   const [deep, setDeep] = useState(false);
   const [timelineIndex, setTimelineIndex] = useState(0);
   const [openChallenge, setOpenChallenge] = useState<number | null>(0);
-  const [heroPhase, setHeroPhase] = useState(0);
+  const [heroPhase, setHeroPhase] = useState(1);
   const reduced = useReducedMotion();
   const t = copy[lang];
   const direction = lang === "fa" ? "rtl" : "ltr";
-  const brandLabel = lang === "fa" ? "روایت سلول" : "Cell Story";
   const titleLines = t.title.split("\n");
   const fade = reduced
     ? {}
@@ -798,7 +797,7 @@ export default function Home() {
     document.documentElement.lang = lang === "fa" ? "fa" : "en";
     document.documentElement.dir = direction;
     setSelectedStage(null);
-    setHeroPhase(0);
+    setHeroPhase(1);
   }, [lang, direction]);
 
   const scrollTo = (id: string) =>
@@ -940,13 +939,6 @@ export default function Home() {
           <div className="hero-copy">
             <p className="brand-signal">
               <img src={ASSETS.mark} alt="" width={28} height={28} />
-              <TypeFadeText
-                key={`brand-${lang}`}
-                text={brandLabel}
-                speed={42}
-                delay={180}
-                onDone={() => setHeroPhase(1)}
-              />
             </p>
             <h1>
               {titleLines.map((line, i) => (
@@ -1536,10 +1528,6 @@ export default function Home() {
         <section className="quiz-section">
           <div className="quiz-inner">
             <SectionTag n="05" label={lang === "fa" ? "ایستگاه یادگیری" : "Learning checkpoint"} />
-            <div className="quiz-heading">
-              <h2>{t.quizTitle}</h2>
-              <p>{t.quizIntro}</p>
-            </div>
             <QuizExam lang={lang} />
           </div>
         </section>

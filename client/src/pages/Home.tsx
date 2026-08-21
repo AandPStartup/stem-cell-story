@@ -5,23 +5,25 @@ import { useTheme } from "@/contexts/ThemeContext";
 import QuizExam from "@/components/QuizExam";
 import FadeCarousel from "@/components/FadeCarousel";
 
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+
 const ASSETS = {
-  hero: "/images/hero-stem-cell.jpg",
-  differentiation: "/images/differentiation-pathways.jpg",
-  ips: "/images/ips-reprogramming.jpg",
-  ipsFactors: "/images/ips-factors.jpg",
-  ipsModeling: "/images/ips-modeling.jpg",
-  ipsDirected: "/images/ips-directed.jpg",
-  tissue: "/images/tissue-regeneration.jpg",
-  challengeIntegration: "/images/challenge-integration.jpg",
-  challengeImmunity: "/images/challenge-immunity.jpg",
-  challengePurity: "/images/challenge-purity.jpg",
-  challengeTumor: "/images/challenge-tumor-risk.jpg",
-  challengeScale: "/images/challenge-scale.jpg",
-  evidenceLab: "/images/evidence-lab.jpg",
-  evidencePreclinical: "/images/evidence-preclinical.jpg",
-  evidenceClinical: "/images/evidence-clinical.jpg",
-  mark: "/images/cell-mark.jpg",
+  hero: asset("images/hero-stem-cell.jpg"),
+  differentiation: asset("images/differentiation-pathways.jpg"),
+  ips: asset("images/ips-reprogramming.jpg"),
+  ipsFactors: asset("images/ips-factors.jpg"),
+  ipsModeling: asset("images/ips-modeling.jpg"),
+  ipsDirected: asset("images/ips-directed.jpg"),
+  tissue: asset("images/tissue-regeneration.jpg"),
+  challengeIntegration: asset("images/challenge-integration.jpg"),
+  challengeImmunity: asset("images/challenge-immunity.jpg"),
+  challengePurity: asset("images/challenge-purity.jpg"),
+  challengeTumor: asset("images/challenge-tumor-risk.jpg"),
+  challengeScale: asset("images/challenge-scale.jpg"),
+  evidenceLab: asset("images/evidence-lab.jpg"),
+  evidencePreclinical: asset("images/evidence-preclinical.jpg"),
+  evidenceClinical: asset("images/evidence-clinical.jpg"),
+  mark: asset("images/cell-mark.jpg"),
 };
 
 type Lang = "fa" | "en";
